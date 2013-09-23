@@ -1,0 +1,45 @@
+#main-header {
+  padding: 12px 0;
+  background:#121010;
+  filter: alpha(opacity = 80);
+}
+#container #main-content p {
+  margin: 8px 0;
+}
+#container #main-content .articles h2 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+#container #main-content h1 {
+  font-size:32px;
+  margin-bottom:32px;
+}
+#container #main-content .logo-new-line {
+  font-size:64px;
+  margin: 20px 0;
+}
+#container #main-content .articles article {
+  margin-bottom:32px;
+}
+#container #main-content .articles article footer {
+  font-size: 12px;
+}
+#container #main-content .articles .post-info {
+  border-bottom: 1px solid #777;
+}
+#container #side-content {
+  padding-top: 5.75em;
+}
+#container #side-content .sample-sidebar > section {
+  background: #FFF;
+  margin-left: 1em;
+  padding: 1em;
+}
+#container #side-content h2 {
+  padding:0.5em;
+}
+#container #side-content h2:after {
+  margin: 0.5em 0 0 -0.5em;
+  border-width: 1em 0 0 1em;
+}

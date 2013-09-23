@@ -1,0 +1,299 @@
+html, body {
+    font-family:'museo_sans_500regular', Helvetica, Verdana, Arial, Sans-Serif;
+    background: #FBF4DD;
+    text-shadow:0 0 1px rgba(0, 0, 0, 0.1);
+    line-height:1.5em;
+    font-size:16px;
+    color:#555;
+}
+
+a:link, a:visited {
+    color:#555;
+    text-decoration:none;
+}
+
+a:hover, a:active {
+    color:#555;
+    text-decoration:underline;
+}
+
+#main-header {
+    position:fixed;
+    z-index:10;
+    width:100%;
+    padding:0.75rem 0;
+    background:rgba(50,45,45,0.8);
+    color:#FBF4DD;
+    vertical-align:middle;
+    top:0;
+
+    a:link, a:visited {
+        color:#FBF4DD;
+        text-decoration:none;
+        -webkit-transition: 0.25s;
+        transition: 0.25s;
+    }
+
+    a:hover, a:active {
+        color:#FBF4DD;
+        text-decoration:underline;
+    }
+
+    #mobile-dropdown {
+        display:none;
+    }
+
+    #login {
+        display:inline-block;
+        padding-left:10px;
+    }
+
+    #main-nav {
+        .navigation {
+            font-weight:bold;
+            float:right;
+
+            li {
+                border-right: 1px solid #FFF;
+                display:inline-block;
+                padding:0px 10px 0px 5px;
+            }
+
+            li:last-child {
+                border:0;
+            }
+        }
+    }
+}
+
+#container {
+    width:80%;
+    margin:4rem auto 0;
+    max-width:64rem;
+
+    #main-content {
+        display:inline-block;
+        width:74%;
+        margin-right:1.4%;
+
+        h1 {
+            font-family:TF2 Build, Verdana, Geneva, Sans-Serif;
+            text-shadow:3px 0.125rem 0.0625rem rgba(0, 0, 0, 0.2);
+            width:100%;
+            text-align:center;
+            font-size:2rem;
+            margin-bottom:2rem;
+        }
+
+        p {
+            margin: 0.5rem 0;
+        }
+
+        .logo-new-line {
+            display:block;
+            font-size:4rem;
+            color:#CF6A32;
+            margin:1.25rem 0;
+        }
+
+        .articles {
+            article {
+                margin-bottom:2rem;
+
+                footer {
+                    font-size:0.75rem;
+                }
+            }
+
+            h2 {
+                font-size:2rem;
+                font-weight:bold;
+                margin-bottom:0.5rem;
+            }
+
+            .post-info {
+                border-bottom:1px solid rgba(0, 0, 0, 0.1);
+
+                .date {
+                    float:right;
+                }
+            }
+
+            .post-info > li {
+                display:inline-block;
+            }
+        }
+    }
+
+    #side-content {
+        padding-top:5.75rem;
+        vertical-align:top;
+        display:inline-block;
+        width:24%;
+
+        .sample-sidebar > section {
+            background:#FFF;
+            margin-left:1rem;
+            padding:1rem;
+        }
+
+        h2 {
+            padding:0.5rem;
+            color: #FFF;
+            text-shadow:1px 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        h2:after {
+            display:block;
+            content:"";
+            margin:0.5rem 0 0 -0.5rem;
+            position:absolute;
+            border-width:1em 0 0 1em;
+            border-style:solid;
+        }
+
+        .green {
+            background:#7fc04c;
+        }
+
+        .green:after {
+            border-color:#5a8e32 transparent transparent transparent;
+        }
+
+        .blue {
+            background:#4c93c0;
+        }
+
+        .blue:after {
+            border-color:#326a8e transparent transparent transparent;
+        }
+
+        .red {
+            background:#c04c4c;
+        }
+
+        .red:after {
+            border-color:#8e3232 transparent transparent transparent;
+        }
+
+        .yellow {
+            background:#c0bc4c;
+        }
+
+        .yellow:after {
+            border-color:#8e8b32 transparent transparent transparent;
+        }
+    }
+}
+
+
+@font-face {
+    font-family: 'TF2 Build';
+    src: url('http://i1.theportalwiki.net/fonts/tf2build-webfont.eot');
+    src: url('http://i1.theportalwiki.net/fonts/tf2build-webfont.eot?#iefix') format('embedded-opentype'), url('http://i1.theportalwiki.net/fonts/tf2build-webfont.woff') format('woff'), url('http://i1.theportalwiki.net/fonts/tf2build-webfont.ttf') format('truetype'), url('http://i1.theportalwiki.net/fonts/tf2build-webfont.svg#TF2 Build') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'museo_sans_500regular';
+    src: url('../fonts/MuseoSans_500-webfont.eot');
+    src: url('../fonts/MuseoSans_500-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/MuseoSans_500-webfont.woff') format('woff'),
+         url('../fonts/MuseoSans_500-webfont.ttf') format('truetype'),
+         url('../fonts/MuseoSans_500-webfont.svg#museo_sans_500regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@media (max-width: 719px) {
+    #main-header {
+        #mobile-dropdown {
+            display:inline-block;
+            border:0.1875rem solid #FFF;
+            padding:0.4375rem 0.625rem;
+            border-radius:0.375rem;
+            margin-left:0.75rem;
+            cursor:pointer;
+        }
+
+        .selected {
+            box-shadow:0 0 0.625rem #000 inset;
+            text-shadow:0 0 0.3125rem #000;
+        }
+
+        #main-nav {
+            display:none;
+            position:absolute;
+            width:100%;
+            background:rgba(50,45,45,0.8);
+            top:68px;
+            
+            .navigation {
+                float:none;
+
+                li {
+                    display:block;
+                    padding:0.375rem;
+                    border-right:0;
+                    border-bottom:1px solid #FFF;
+                }
+
+                li:first-child {
+                    border-top:1px solid #FFF;
+                }
+            }
+        }
+    }
+
+    #container {
+        #main-content {
+            h1 {
+                font-size:1.5rem;
+            }
+
+            .logo-new-line {
+                font-size:3rem;
+            }
+
+            .articles {
+                .post-info {
+                    .date {
+                        float:none;
+                    }
+                }
+
+                .post-info > li {
+                    display:block;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1019px) {
+    #main-header {
+        position:static;
+
+        #login {
+            .daily-message-desktop {
+                display:none;
+            }
+        }
+    }
+    #container {
+        width: 90%;
+        margin:1rem auto 0;
+        
+        #main-content, #side-content {
+            width:100%;
+            display:block;
+            float:none;
+        }
+
+        #side-content {
+            padding:0;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.new-article li label {
+	vertical-align:top
+}
+
+#article-title {
+	margin-left:50px
+}
+
+#message {
+	margin-left:22px;
+	height:100px;
+	width:450px
+}
