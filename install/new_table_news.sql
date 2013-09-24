@@ -1,4 +1,4 @@
-USE cityofteufort;
+USE myfam;
 
 CREATE TABLE `news` (
  `id` integer NOT NULL AUTO_INCREMENT,

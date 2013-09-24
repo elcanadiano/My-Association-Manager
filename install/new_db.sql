@@ -1,3 +1,3 @@
-CREATE DATABASE cityofteufort;
+CREATE DATABASE myfam;
 
-GRANT ALL PRIVILEGES ON cityofteufort.* TO nicetry@localhost IDENTIFIED BY 'nicetry1';
+GRANT ALL PRIVILEGES ON myfam.* TO nicetry@localhost IDENTIFIED BY 'nicetry1';

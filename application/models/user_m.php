@@ -1,4 +1,12 @@
 <?php
+
+// If we are not using PHP 5.5 or greater, we need a
+// supplementary file for all things bcrypt.
+if (PHP_VERSION_ID < 50500)
+{
+	require('application/libraries/password.php');
+}
+
 Class User_m extends CI_Model
 {
 	/**
@@ -15,19 +23,26 @@ Class User_m extends CI_Model
 		$this->db->select('id, username, password')
 			->from('admin')
 			->where('username', $username)
-			->where('password', $this->encr($password))
 			->limit(1);
 
 		$query = $this->db->get();
 
+		// If there is a user, verify the password. It is automatically
+		// false if there is no user.
 		if ($query->num_rows() === 1)
 		{
-			return $query->result();
-		}
-		else
-		{
+			$result = $query->result();
+			$hash = $result[0]->password;
+			
+			if (password_verify($password, $hash))
+			{
+				return $result;
+			}
+
 			return FALSE;
 		}
+		
+		return FALSE;
 	}
 
 	/**
@@ -116,6 +131,7 @@ Class User_m extends CI_Model
 	 */
 	private function encr($password)
 	{
-		return hash('sha256', hash('sha256', $password));
+		return password_hash($password, PASSWORD_BCRYPT);
+		//return hash('sha256', hash('sha256', $password));
 	}
 }
