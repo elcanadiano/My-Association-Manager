@@ -73,7 +73,7 @@ class User extends C_Admin {
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|callback__password_check');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('confirm', 'Password (confirm)', 'trim|required|xss_clean');
 
 		$username = $this->input->post('username');
