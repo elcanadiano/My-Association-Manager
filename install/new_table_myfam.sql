@@ -70,7 +70,7 @@ CREATE TABLE `standings` (
   PRIMARY KEY (`lid`, `tid`, `sid`),
   FOREIGN KEY (`tid`) references team(`id`),
   FOREIGN KEY (`sid`) references season(`id`),
-  FOREIGN KEY (`lid`) references league(`id`),
+  FOREIGN KEY (`lid`) references league(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE `roster` (
@@ -81,10 +81,10 @@ CREATE TABLE `roster` (
   PRIMARY KEY (`pid`, `tid`, `sid`),
   FOREIGN KEY (`tid`) references team(`id`),
   FOREIGN KEY (`sid`) references season(`id`),
-  FOREIGN KEY (`pid`) references player(`id`),
+  FOREIGN KEY (`pid`) references player(`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
-CREATE TABLE `match` (
+CREATE TABLE `game` (
   `sid` integer NOT NULL,
   `fid` integer NOT NULL,
   `lid` integer NOT NULL,
@@ -106,25 +106,26 @@ CREATE TABLE `match` (
 CREATE TABLE `event` (
   `tid` integer NOT NULL,
   `pid` integer NOT NULL,
-  `mid` integer NOT NULL,
+  `gid` integer NOT NULL,
   `type` varchar(16) NOT NULL,
   `min` integer NOT NULL,
-  PRIMARY KEY (`tid`, `pid`, `mid`),
+  PRIMARY KEY (`tid`, `pid`, `gid`),
   FOREIGN KEY (`tid`) references team(`id`),
-  FOREIGN KEY (`pid`) references playercd (`id`),
-  FOREIGN KEY (`mid`) references match(`id`)
+  FOREIGN KEY (`pid`) references player(`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
 
 /**
  * This trigger will update an entry in 'standings' related to a
- * "first-time" update to a match row, in which the game is then
+ * "first-time" update to a game row, in which the game is then
  * played.
  *
  * The current assumption is that if a second update is needed for
- * a match (for example, an error occurs)
+ * a game (for example, an error occurs)
  */
-CREATE TRIGGER `update_standing` AFTER URPDATE ON `match`
+
+delimiter /
+
+CREATE TRIGGER update_standing AFTER UPDATE ON game
 FOR EACH ROW
 BEGIN
   # If a score has been recorded already, we'll reverse the old score
@@ -152,8 +153,10 @@ BEGIN
       WHERE s.tid = OLD.atid
         AND s.sid = OLD.sid
         AND s.lid = OLD.lid;
+
+
     # The Away Team previously recorded a win
-    ELSE IF OLD.h_g < OLD.a_g THEN
+    ELSEIF OLD.h_g < OLD.a_g THEN
       # Home loss
       UPDATE standings s
       SET s.pld = s.pld - 1,
@@ -176,17 +179,14 @@ BEGIN
         AND s.lid = OLD.lid;
 
     # The previous game resulted in a draw
-    ELSE IF OLD.h_g = OLD.a_g 
+    ELSEIF OLD.h_g = OLD.a_g THEN 
       # Home tie
       UPDATE standings s
-      SET s.pld = s.pld - 1,
-          s.h_t = s.h_t - 1,
+      SET s.pld = s.pld - 1, s.h_t = s.h_t - 1,
           s.pts = s.pts - 1,
           s.h_gf = s.h_gf - OLD.h_g,
           s.h_ga = s.h_ga - OLD.a_g
-      WHERE s.tid = OLD.htid
-        AND s.sid = OLD.sid
-        AND s.lid = OLD.lid;
+      WHERE s.tid = OLD.htid AND s.sid = OLD.sid AND s.lid = OLD.lid;
       
       # Away tie
       UPDATE standings s
@@ -227,7 +227,7 @@ BEGIN
       AND s.sid = OLD.sid
       AND s.lid = OLD.lid;
   # Away Team wins.
-  ELSE IF NEW.h_g < NEW.a_g THEN
+  ELSEIF NEW.h_g < NEW.a_g THEN
     # Home loss
     UPDATE standings s
     SET s.pld = s.pld + 1,
@@ -250,7 +250,7 @@ BEGIN
       AND s.lid = OLD.lid;
 
   # If there was a draw.
-  ELSE IF NEW.h_g = NEW.a_g THEN
+  ELSEIF NEW.h_g = NEW.a_g THEN
     # Home tie
     UPDATE standings s
     SET s.pld = s.pld + 1,
@@ -274,3 +274,6 @@ BEGIN
       AND s.lid = OLD.lid;
   END IF;
 END;
+/
+
+delimiter ;
