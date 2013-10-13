@@ -16,7 +16,7 @@ class Home extends C_Admin {
 			'css' => array('/styles/admin.css')
 		);
 		$this->load->view('admin/header.php', $data);
-		$this->load->view('admin/main.php', $data);
+		$this->load->view('admin/show_all_leagues.php', $data);
 		$this->load->view('admin/footer.php', $data);
 	}
 

@@ -19,6 +19,7 @@
 			<li><a href="/admin/home">Home</a></li>
 			<li><a href="/admin/user">Users</a></li>
 			<li><a href="/admin/news">News Center</a></li>
+			<li><a href="/admin/league">Leagues</a></li>
 		</ul>
 	</nav>
 <?php if (isset($sidenav)): ?>

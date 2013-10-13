@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // If we are not using PHP 5.5 or greater, we need a
 // supplementary file for all things bcrypt.

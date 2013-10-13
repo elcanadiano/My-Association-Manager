@@ -1,7 +1,8 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // We need C_admin
-include('c_admin.php');
+require_once('c_admin.php');
+
 class News extends C_Admin {
 	static private $user_links = array(
 		'title' => 'News Functions',

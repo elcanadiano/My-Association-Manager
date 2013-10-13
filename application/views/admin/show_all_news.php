@@ -1,4 +1,4 @@
-<?php if($msg !== ''): ?>
+<?php if($msg): ?>
 	<p><?= $msg ?></p>
 <?php endif ?>
 

@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 Class News_m extends CI_Model
 {
 	/**
@@ -9,7 +9,7 @@ Class News_m extends CI_Model
 	function retrieve()
 	{
 		// Retrieve the username and ID of all Admins.
-		$query = $this->db->select('news.id AS id, username, title, date')
+		$query = $this->db->select('news.id, username, title, date')
 			->from('news')
 			->join('admin', 'news.aid = admin.id', 'inner')
 			->order_by('date');
