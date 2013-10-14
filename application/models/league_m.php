@@ -8,9 +8,9 @@ Class League_m extends CI_Model
 	 */
 	function retrieve()
 	{
-		$query = $this->db->select('name, age_cat, num_teams, max_roster_size, is_active')
+		$query = $this->db->select('id, name, age_cat')
 			->from('league')
-			->order_by('name');
+			->order_by('age_cat');
 
 		return $query->get()->result();
 	}
@@ -18,16 +18,18 @@ Class League_m extends CI_Model
 	/**
 	 * Inserts a record into the database.
 	 */
-	function insert_league($name, $age_cat, $no_teams, $max_roster_size, $is_active = TRUE)
+	function insert_league($name, $age_cat)
 	{
 		$obj = array(
 			'name' => $name,
-			'age_cat' => $age_cat,
-			'no_teams' => $no_teams,
-			'max_roster_size' => $max_roster_size,
-			'is_active' => $is_active
+			'age_cat' => $age_cat
 		);
 
-		$this->db->insert('news', $obj);
+		try {
+			$this->db->insert('league', $obj);
+		} catch (Exception $e) {
+		    echo 'Caught exception: ',  $e->getMessage(), "\n";
+		    return FALSE;
+		}
 	}
 }

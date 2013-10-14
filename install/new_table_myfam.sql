@@ -1,12 +1,21 @@
 USE myfam;
 
+DROP TABLE `standings`;
+DROP TABLE `roster`;
+DROP TABLE `game`;
+DROP TABLE `event`;
+DROP TABLE `league`;
+DROP TABLE `team`;
+DROP TABLE `field`;
+DROP TABLE `season`;
+DROP TABLE `player`;
+DROP TRIGGER `update_standing`;
+
 CREATE TABLE `league` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `age_cat` varchar(16) NOT NULL,
-  `num_teams` integer NOT NULL,
-  `max_roster_size` integer NOT NULL,
-  `is_active` boolean NOT NULL,
+  UNIQUE (`name`, `age_cat`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 

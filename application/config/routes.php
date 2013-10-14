@@ -40,7 +40,6 @@
 
 $route['default_controller'] = 'homepage';
 $route['404_override'] = '';
-$route['admin/league'] = 'admin/league_a';
 //$route['admin/user'] = 'admin_user';
 /*$route['admin/user/create'] = 'admin/create_user';
 $route['admin/user/change_password/(:any)'] = 'admin/change_password/$1';*/

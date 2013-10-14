@@ -2,24 +2,20 @@
 	<p><?= $msg ?></p>
 <?php endif ?>
 
-<?php if(!isset($leagues) || !$leagues): ?>
+<?php if(!$leagues): ?>
 	<p>You currently do not have any leagues. Why not create one?</p>
 <?php else: ?>
 	<table>
 		<tr>
 			<th>Name</th>
 			<th>Age Category</th>
-			<th>Number of Teams</th>
-			<th>Max. Roster Size</th>
-			<th>Active?</th>
+			<!--<th>Number of Teams</th>-->
 		</tr>
-		<? foreach ($query_result as $row): ?>
+		<? foreach ($leagues as $row): ?>
 			<tr>
 				<td><?= $row->name ?></td>
 				<td><?= $row->age_cat ?></td>
-				<td><?= $row->num_teams ?></td>
-				<td><?= $row->max_roster_size ?></td>
-				<td><?= $row->active ? 'Yes': 'No' ?></td>
+				<!--<td><?= $row->num_teams ?></td>-->
 			</tr>
 		<?php endforeach ?>
 	</table>
