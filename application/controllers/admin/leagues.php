@@ -39,23 +39,32 @@ class Leagues extends C_Admin {
 	}
 
 	/**
-	 * Page to create a user.
+	 * Page to create a league.
 	 */
-	function new_league($msg='', $name='')
+	function new_league($msg='', $name='', $age_cat='')
 	{
+		// If there is no message, set it to the default.
+		if (!$msg)
+		{
+			$msg = 'Please enter the following information for the new league.';
+		}
+
 		$data = array(
+			'form_action' => 'action_create_league',
 			'title' => 'Create a New League',
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
 			'name' => $name,
+			'age_cat' => $age_cat,
 			'msg' => $msg,
+			'submit_message' => 'Add League',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
 		$this->load->view('admin/header.php', $data);
-		$this->load->view('admin/newleague.php', $data);
+		$this->load->view('admin/league_edit.php', $data);
 		$this->load->view('admin/footer.php', $data);
 	}
 
@@ -78,7 +87,79 @@ class Leagues extends C_Admin {
 			if ($this->league->insert_league($name, $age_cat))
 			{
 				$this->index('Article added successfully!');
+				return;
 			}
 		}
+
+		$this->new_league('One or more of the fields are invalid.', $name, $age_cat);
+	}
+
+	/**
+	 * Function to edit a league.
+	 */
+	function edit($lid, $msg='', $name='', $age_cat='')
+	{
+		// If there is no message, set it to the default.
+		if (!$msg)
+		{
+			$league = $this->league->retrieve_by_id($lid);
+
+			// If there is no league, error out.
+			if (!$league)
+			{
+				show_error('No league was found with this ID.');
+			}
+
+			$msg = 'Please enter the following information for the new league.';
+			$name = $league->name;
+			$age_cat = $league->age_cat;
+		}
+
+		$data = array(
+			'form_action' => 'action_edit_league',
+			'title' => 'Edit a league',
+			'js' => array(),
+			'css' => array('/styles/admin.css'),
+			'id' => $lid,
+			'name' => $name,
+			'age_cat' => $age_cat,
+			'msg' => $msg,
+			'submit_message' => 'Edit League',
+			'sidenav' => self::$user_links
+		);
+
+		$this->load->helper(array('form'));
+
+		$this->load->view('admin/header.php', $data);
+		$this->load->view('admin/league_edit.php', $data);
+		$this->load->view('admin/footer.php', $data);
+	}
+
+	/**
+	 * Action to add a league.
+	 */
+	function action_edit_league()
+	{
+		// Loading form validation helper and the Markdown parser.
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('id', 'ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('age_cat', 'Age Category', 'trim|required|xss_clean');
+
+		$lid = $this->input->post('name');
+		$name = $this->input->post('name');
+		$age_cat = $this->input->post('age_cat');
+
+		if ($this->form_validation->run())
+		{
+			if ($this->league->update_league($lid, $name, $age_cat))
+			{
+				$this->index('League Updated successfully!');
+				return;
+			}
+		}
+
+		$this->edit($lid, 'One or more of the fields are invalid.', $name, $age_cat);
 	}
 }

@@ -9,13 +9,16 @@
 		<tr>
 			<th>Name</th>
 			<th>Age Category</th>
-			<!--<th>Number of Teams</th>-->
+			<th>Actions</th>
 		</tr>
-		<? foreach ($leagues as $row): ?>
+		<?php foreach ($leagues as $row): ?>
 			<tr>
 				<td><?= $row->name ?></td>
 				<td><?= $row->age_cat ?></td>
-				<!--<td><?= $row->num_teams ?></td>-->
+				<td>
+					<a href="/admin/leagues/edit/<?= $row->id ?>">Edit</a>
+					<!--<a href="/admin/leagues/delete/<?= $row->id ?>">Delete</a>-->
+				</td>
 			</tr>
 		<?php endforeach ?>
 	</table>

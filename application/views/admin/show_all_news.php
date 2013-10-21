@@ -13,7 +13,7 @@
 			<th>Date</th>
 			<th></th>
 		</tr>
-		<? foreach ($query_result as $row): ?>
+		<?php foreach ($query_result as $row): ?>
 			<tr>
 				<td><?= $row->id ?></td>
 				<td><?= $row->username ?></td>
