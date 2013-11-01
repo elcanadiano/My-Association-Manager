@@ -9,9 +9,9 @@ Class Season_m extends CI_Model
 	 */
 	function retrieve()
 	{
-		$query = $this->db->select('id, name, start_time, end_time')
+		$query = $this->db->select('id, name, start_date, end_date')
 			->from('season')
-			->order_by('start_time');
+			->order_by('start_date');
 
 		return $query->get()->result();
 	}
@@ -23,7 +23,7 @@ Class Season_m extends CI_Model
 	 */
 	function retrieve_by_id($id)
 	{
-		$query = $this->db->select('id, name, start_time, end_time')
+		$query = $this->db->select('id, name, start_date, end_date')
 			->from('season')
 			->where('id', $id)
 			->limit(1);
@@ -36,12 +36,12 @@ Class Season_m extends CI_Model
 	 *
 	 * @return  boolean
 	 */
-	function insert($name, $start_time, $end_time)
+	function insert($name, $start_date, $end_date)
 	{
 		$obj = array(
 			'name' => $name,
-			'start_time' => $start_time,
-			'end_time' => $end_time
+			'start_date' => $start_date,
+			'end_date' => $end_date
 		);
 
 		try {
@@ -59,12 +59,12 @@ Class Season_m extends CI_Model
 	 *
 	 * @return  boolean
 	 */
-	function update($id, $name, $start_time, $end_time)
+	function update($id, $name, $start_date, $end_date)
 	{
 		$obj = array(
 			'name' => $name,
-			'start_time' => $start_time,
-			'end_time' => $end_time
+			'start_date' => $start_date,
+			'end_date' => $end_date
 		);
 
 		try {

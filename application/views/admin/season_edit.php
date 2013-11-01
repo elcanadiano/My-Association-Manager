@@ -17,7 +17,7 @@
 				</li>
 			</ul>
 			<?php if (isset($id)): ?>
-				<input id="id" name="id" type="hidden" name="country" value="<?= $id ?>">
+				<input id="id" name="id" type="hidden" name="id" value="<?= $id ?>">
 			<?php endif ?>
 			<input type="submit" value="<?= $submit_message ?>" />
 		</form>

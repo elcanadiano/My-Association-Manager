@@ -43,8 +43,9 @@ CREATE TABLE `team` (
 CREATE TABLE `season` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
-  `start_time` date,
-  `end_time` date,
+  `start_date` date,
+  `end_date` date,
+  UNIQUE (`name`, `start_date`, `end_date`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 

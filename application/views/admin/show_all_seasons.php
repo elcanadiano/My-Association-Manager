@@ -8,7 +8,6 @@
 	<table>
 		<tr>
 			<th>Name</th>
-			<th>Age Category</th>
 			<th>Start Date</th>
 			<th>End Date</th>
 			<th>Actions</th>
@@ -16,11 +15,10 @@
 		<?php foreach ($seasons as $row): ?>
 			<tr>
 				<td><?= $row->name ?></td>
-				<td><?= $row->age_cat ?></td>
-				<td><?= $row->start_time ?></td>
-				<td><?= $row->end_time ?></td>
+				<td><?= $row->start_date ?></td>
+				<td><?= $row->end_date ?></td>
 				<td>
-					<a href="/admin/leagues/edit/<?= $row->id ?>">Edit</a>
+					<a href="/admin/seasons/edit/<?= $row->id ?>">Edit</a>
 					<!--<a href="/admin/leagues/delete/<?= $row->id ?>">Delete</a>-->
 				</td>
 			</tr>

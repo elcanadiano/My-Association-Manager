@@ -78,27 +78,35 @@ class Seasons extends C_Admin {
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('age_cat', 'Age Category', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|xss_clean');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|xss_clean');
 
 		$name = $this->input->post('name');
-		$age_cat = $this->input->post('age_cat');
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+
+		if (strtotime($start_date) > strtotime($end_date))
+		{
+			$this->edit($sid, 'The end date must exceed the start date.', $name, $start_date, $end_date);
+			return;
+		}
 
 		if ($this->form_validation->run())
 		{
-			if ($this->seasons->insert($name, $age_cat))
+			if ($this->seasons->insert($name, $start_date, $end_date))
 			{
-				$this->index('Article added successfully!');
+				$this->index('Season added successfully!');
 				return;
 			}
 		}
 
-		$this->new_season('One or more of the fields are invalid.', $name, $age_cat);
+		$this->new_season('One or more of the fields are invalid.', $name, $start_date, $end_date);
 	}
 
 	/**
 	 * Function to edit a season.
 	 */
-	function edit($lid, $msg='', $name='', $age_cat='')
+	function edit($lid, $msg='', $name='', $start_date='', $end_date='')
 	{
 		// If there is no message, set it to the default.
 		if (!$msg)
@@ -148,21 +156,29 @@ class Seasons extends C_Admin {
 
 		$this->form_validation->set_rules('id', 'ID', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('age_cat', 'Age Category', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|xss_clean');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|xss_clean');
 
-		$lid = $this->input->post('name');
+		$sid = $this->input->post('id');
 		$name = $this->input->post('name');
-		$age_cat = $this->input->post('age_cat');
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+
+		if (strtotime($start_date) > strtotime($end_date))
+		{
+			$this->edit($sid, 'The end date must exceed the start date.', $name, $start_date, $end_date);
+			return;
+		}
 
 		if ($this->form_validation->run())
 		{
-			if ($this->seasons->update_season($lid, $name, $age_cat))
+			if ($this->seasons->update($sid, $name, $start_date, $end_date))
 			{
 				$this->index('season Updated successfully!');
 				return;
 			}
 		}
 
-		$this->edit($lid, 'One or more of the fields are invalid.', $name, $age_cat);
+		$this->edit($sid, 'One or more of the fields are invalid.', $name, $start_date, $end_date);
 	}
 }
