@@ -5,7 +5,7 @@ require_once('c_admin.php');
 
 class Leagues extends C_Admin {
 	static private $user_links = array(
-		'title' => 'News Functions',
+		'title' => 'League Functions',
 		'links' => array(
 			array(
 				'url' => '/admin/leagues/new_league',

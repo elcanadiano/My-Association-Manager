@@ -19,7 +19,9 @@
 			<li><a href="/admin/home">Home</a></li>
 			<li><a href="/admin/user">Users</a></li>
 			<li><a href="/admin/news">News Center</a></li>
+			<li><a href="/admin/teams">Teams</a></li>
 			<li><a href="/admin/leagues">Leagues</a></li>
+			<li><a href="/admin/fields">Fields</a></li>
 			<li><a href="/admin/seasons">Seasons</a></li>
 		</ul>
 	</nav>
