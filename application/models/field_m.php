@@ -1,5 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-Class League_m extends CI_Model
+
+Class Field_m extends CI_Model
 {
 	/**
 	 * Retrieves a list of leagues.
@@ -8,9 +9,9 @@ Class League_m extends CI_Model
 	 */
 	function retrieve()
 	{
-		$query = $this->db->select('id, name, age_cat')
-			->from('league')
-			->order_by('age_cat');
+		$query = $this->db->select('id, name, address, city, region, pitch_type')
+			->from('field')
+			->order_by('name');
 
 		return $query->get()->result();
 	}
@@ -22,8 +23,8 @@ Class League_m extends CI_Model
 	 */
 	function retrieve_by_id($id)
 	{
-		$query = $this->db->select('id, name, age_cat')
-			->from('league')
+		$query = $this->db->select('id, name, address, city, region, pitch_type')
+			->from('field')
 			->where('id', $id)
 			->limit(1);
 
@@ -35,15 +36,18 @@ Class League_m extends CI_Model
 	 *
 	 * @return  boolean
 	 */
-	function insert_league($name, $age_cat)
+	function insert($name, $address, $city, $region, $pitch_type)
 	{
 		$obj = array(
 			'name' => $name,
-			'age_cat' => $age_cat
+			'address' => $address,
+			'city' => $city,
+			'region' => $region,
+			'pitch_type' => $pitch_type
 		);
 
 		try {
-			$this->db->insert('league', $obj);
+			$this->db->insert('field', $obj);
 		} catch (Exception $e) {
 		    echo 'Caught exception: ',  $e->getMessage(), "\n";
 		    return FALSE;
@@ -57,15 +61,18 @@ Class League_m extends CI_Model
 	 *
 	 * @return  boolean
 	 */
-	function update_league($id, $name, $age_cat)
+	function update($id, $name, $address, $city, $region, $pitch_type)
 	{
 		$obj = array(
 			'name' => $name,
-			'age_cat' => $age_cat
+			'address' => $address,
+			'city' => $city,
+			'region' => $region,
+			'pitch_type' => $pitch_type
 		);
 
 		try {
-			$this->db->where('id', $id)->update('league', $obj);
+			$this->db->where('id', $id)->update('field', $obj);
 		} catch (Exception $e) {
 		    log_message('error', 'Caught exception: ' . $e->getMessage());
 		    return FALSE;

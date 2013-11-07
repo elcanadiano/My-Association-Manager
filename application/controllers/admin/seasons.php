@@ -5,7 +5,7 @@ require_once('c_admin.php');
 
 class Seasons extends C_Admin {
 	static private $user_links = array(
-		'title' => 'News Functions',
+		'title' => 'Seasons Functions',
 		'links' => array(
 			array(
 				'url' => '/admin/seasons/new_season',

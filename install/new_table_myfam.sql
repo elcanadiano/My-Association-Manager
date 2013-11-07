@@ -35,7 +35,6 @@ CREATE TABLE `team` (
   `homeid` integer NOT NULL,
   `city` varchar(32) NOT NULL,
   `region` varchar(32),
-  `roster_size` integer NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`homeid`) REFERENCES field(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
