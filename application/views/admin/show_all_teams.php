@@ -8,15 +8,17 @@
 	<table>
 		<tr>
 			<th>Name</th>
-			<th>Start Date</th>
-			<th>End Date</th>
+			<th>Home Field</th>
+			<th>City</th>
+			<th>Province/State</th>
 			<th>Actions</th>
 		</tr>
 		<?php foreach ($teams as $row): ?>
 			<tr>
 				<td><?= $row->name ?></td>
-				<td><?= $row->start_date ?></td>
-				<td><?= $row->end_date ?></td>
+				<td><?= $row->field_name ?></td>
+				<td><?= $row->city ?></td>
+				<td><?= $row->region ?></td>
 				<td>
 					<a href="/admin/teams/edit/<?= $row->id ?>">Edit</a>
 					<!--<a href="/admin/leagues/delete/<?= $row->id ?>">Delete</a>-->

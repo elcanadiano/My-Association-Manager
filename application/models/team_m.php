@@ -1,8 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 Class Team_m extends CI_Model
 {
 	/**
-	 * Attempt to grab the news ID, the author, and the title.
+	 * Retrieves a list of teams.
 	 *
 	 * @return  object
 	 */
@@ -17,72 +18,80 @@ Class Team_m extends CI_Model
 	}
 
 	/**
-	 * Similar to retrieve, but retrieves the parsed message as well.
+	 * Retrieves a list of teams along with the associated field name.
 	 *
 	 * @return  object
 	 */
-	function retrieve_parsed()
+	function retrieve_with_field()
 	{
-		$query = $this->db->select('username, title, date, parsed')
-			->from('news')
-			->join('admin', 'news.aid = admin.id', 'inner')
-			->order_by('date', 'desc');
+		// Retrieve the username and ID of all Admins.
+		$query = $this->db->select('t.id, t.name, homeid, t.city, t.region, f.name AS field_name')
+			->from('team t')
+			->join('field f', 't.homeid = f.id', 'inner')
+			->order_by('name');
 
 		return $query->get()->result();
 	}
 
 	/**
-	 * Returns a given news object.
-	 * 
+	 * Retrieves a team given the ID.
+	 *
 	 * @return  object
 	 */
-	function retrieve_one($id)
+	function retrieve_by_id($id)
 	{
-		$query = $this->db->select('*')
-			->from('news')
-			->where('id', $id);
+		$query = $this->db->select('id, name, homeid, city, region')
+			->from('team')
+			->where('id', $id)
+			->limit(1);
 
-		return $query->get()->result();
+		return $query->get()->result()[0];
 	}
 
 	/**
-	 * Inserts a new article with the immediate date. If an article
-	 * has the exact same title, Author ID, and Message, do not insert
-	 * the article into the database as it is treated as a duplicate.
+	 * Inserts a record into the database. Returns TRUE if a successful insert was added.
+	 *
+	 * @return  boolean
 	 */
-	function new_article($title, $message, $parsed)
+	function insert($name, $homeid, $city, $region)
 	{
-		$login_info = $this->session->userdata('logged_in');
-		$date = date("Y-m-d H:i:s");
-
-		$check_obj = array(
-			'aid' => $login_info['id'],
-			'title' => $title,
-			'message' => $message
+		$obj = array(
+			'name' => $name,
+			'homeid' => $homeid,
+			'city' => $city,
+			'region' => $region
 		);
 
-		$this->db->select('id')
-			->from('news')
-			->where($check_obj)
-			->limit(1);
-
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0)
-		{
-			return FALSE;
+		try {
+			$this->db->insert('team', $obj);
+		} catch (Exception $e) {
+		    echo 'Caught exception: ',  $e->getMessage(), "\n";
+		    return FALSE;
 		}
 
+		return TRUE;
+	}
+
+	/**
+	 * Updates a record in the database. Returns TRUE if a successful insert was added.
+	 *
+	 * @return  boolean
+	 */
+	function update($id, $name, $homeid, $city, $region)
+	{
 		$obj = array(
-			'aid' => $login_info['id'],
-			'title' => $title,
-			'date' => $date,
-			'message' => $message,
-			'parsed' => $parsed
+			'name' => $name,
+			'homeid' => $homeid,
+			'city' => $city,
+			'region' => $region
 		);
 
-		$this->db->insert('news', $obj);
+		try {
+			$this->db->where('id', $id)->update('team', $obj);
+		} catch (Exception $e) {
+		    log_message('error', 'Caught exception: ' . $e->getMessage());
+		    return FALSE;
+		}
 
 		return TRUE;
 	}

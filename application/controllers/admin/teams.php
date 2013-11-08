@@ -18,12 +18,13 @@ class Teams extends C_Admin {
 	{
 		parent::__construct();
 		$this->load->model('team_m','teams');
+		$this->load->model('field_m','fields');
 	}
 
 	// Gets session data, passes info to header, main, and footer.
 	function index($msg = '')
 	{
-		$teams = $this->teams->retrieve();
+		$teams = $this->teams->retrieve_with_field();
 
 		$data = array(
 			'title' => 'Teams',
@@ -41,144 +42,147 @@ class Teams extends C_Admin {
 	/**
 	 * Page to create a league.
 	 */
-	function new_season($msg='', $name='', $start_date='', $end_date='')
+	function new_team($msg='', $name='', $homeid='', $city='', $region='')
 	{
 		// If there is no message, set it to the default.
 		if (!$msg)
 		{
-			$msg = 'Please enter the following information for the new season.';
+			$msg = 'Please enter the information regarding the new team.';
 		}
 
+		// Grab the list of fields for the dropdown.
+		$fields = $this->fields->retrieve_id_name();
+
 		$data = array(
-			'form_action' => 'action_create_season',
-			'title' => 'Create a New Season',
+			'form_action' => 'action_create_team',
+			'title' => 'Create a New Team',
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
+			'fields' => $fields,
 			'name' => $name,
-			'start_date' => $start_date,
-			'end_date' => $end_date,
+			'homeid' => $homeid,
+			'city' => $city,
+			'region' => $region,
 			'msg' => $msg,
-			'submit_message' => 'Add Season',
+			'submit_message' => 'Add Team',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
 		$this->load->view('admin/header.php', $data);
-		$this->load->view('admin/season_edit.php', $data);
+		$this->load->view('admin/team_edit.php', $data);
 		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Action to add a season.
+	 * Action to add a team.
 	 */
-	function action_create_season()
+	function action_create_team()
 	{
 		// Loading form validation helper and the Markdown parser.
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|xss_clean');
-		$this->form_validation->set_rules('end_date', 'End Date', 'trim|xss_clean');
+		$this->form_validation->set_rules('homeid', 'Field', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('region', 'Region', 'trim|required|xss_clean');
 
 		$name = $this->input->post('name');
-		$start_date = $this->input->post('start_date');
-		$end_date = $this->input->post('end_date');
-
-		if (strtotime($start_date) > strtotime($end_date))
-		{
-			$this->edit($sid, 'The end date must exceed the start date.', $name, $start_date, $end_date);
-			return;
-		}
+		$homeid = $this->input->post('homeid');
+		$city = $this->input->post('city');
+		$region = $this->input->post('region');
 
 		if ($this->form_validation->run())
 		{
-			if ($this->teams->insert($name, $start_date, $end_date))
+			if ($this->teams->insert($name, $homeid, $city, $region))
 			{
-				$this->index('Season added successfully!');
+				$this->index('Team added successfully!');
 				return;
 			}
 		}
 
-		$this->new_season('One or more of the fields are invalid.', $name, $start_date, $end_date);
+		$this->new_team('One or more of the fields are invalid.', $name, $homeid, $city, $region);
 	}
 
 	/**
-	 * Function to edit a season.
+	 * Function to edit a team.
 	 */
-	function edit($lid, $msg='', $name='', $start_date='', $end_date='')
+	function edit($tid, $msg='', $name='', $homeid='', $city='', $region='')
 	{
 		// If there is no message, set it to the default.
 		if (!$msg)
 		{
-			$season = $this->teams->retrieve_by_id($lid);
+			$team = $this->teams->retrieve_by_id($tid);
 
-			// If there is no season, error out.
-			if (!$season)
+			// If there is no team, error out.
+			if (!$team)
 			{
-				show_error('No season was found with this ID.');
+				show_error('No team was found with this ID.');
 			}
 
-			$msg = 'Please enter the following information for the new season.';
-			$name = $season->name;
-			$start_date = $season->start_date;
-			$end_date = $season->end_date;
+			$msg = 'Please enter the following information for the new team.';
+			$name = $team->name;
+			$homeid = $team->homeid;
+			$city = $team->city;
+			$region = $team->region;
 		}
 
+		// Grab the list of fields for the dropdown.
+		$fields = $this->fields->retrieve_id_name();
+
 		$data = array(
-			'form_action' => 'action_edit_season',
-			'title' => 'Edit a Season',
+			'form_action' => 'action_edit_team',
+			'title' => 'Edit a Team',
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
-			'id' => $lid,
+			'fields' => $fields,
+			'id' => $tid,
 			'name' => $name,
-			'start_date' => $start_date,
-			'end_date' => $end_date,
+			'homeid' => $homeid,
+			'city' => $city,
+			'region' => $region,
 			'msg' => $msg,
-			'submit_message' => 'Edit Season',
+			'submit_message' => 'Edit Team',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
 		$this->load->view('admin/header.php', $data);
-		$this->load->view('admin/season_edit.php', $data);
+		$this->load->view('admin/team_edit.php', $data);
 		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Action to add a season.
+	 * Action to add a team.
 	 */
-	function action_edit_season()
+	function action_edit_team()
 	{
 		// Loading form validation helper and the Markdown parser.
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('id', 'ID', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|xss_clean');
-		$this->form_validation->set_rules('end_date', 'End Date', 'trim|xss_clean');
+		$this->form_validation->set_rules('homeid', 'Field', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('region', 'Region', 'trim|required|xss_clean');
 
-		$sid = $this->input->post('id');
+		$tid = $this->input->post('id');
 		$name = $this->input->post('name');
-		$start_date = $this->input->post('start_date');
-		$end_date = $this->input->post('end_date');
-
-		if (strtotime($start_date) > strtotime($end_date))
-		{
-			$this->edit($sid, 'The end date must exceed the start date.', $name, $start_date, $end_date);
-			return;
-		}
+		$homeid = $this->input->post('homeid');
+		$city = $this->input->post('city');
+		$region = $this->input->post('region');
 
 		if ($this->form_validation->run())
 		{
-			if ($this->teams->update($sid, $name, $start_date, $end_date))
+			if ($this->teams->update($tid, $name, $homeid, $city, $region))
 			{
-				$this->index('season Updated successfully!');
+				$this->index('Team Updated successfully!');
 				return;
 			}
 		}
 
-		$this->edit($sid, 'One or more of the fields are invalid.', $name, $start_date, $end_date);
+		$this->edit($tid, 'One or more of the fields are invalid.', $name, $homeid, $city, $region);
 	}
 }

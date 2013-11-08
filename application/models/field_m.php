@@ -17,6 +17,20 @@ Class Field_m extends CI_Model
 	}
 
 	/**
+	 * Retrieves a list of leagues.
+	 *
+	 * @return  object
+	 */
+	function retrieve_id_name()
+	{
+		$query = $this->db->select('id, name')
+			->from('field')
+			->order_by('id');
+
+		return $query->get()->result();
+	}
+
+	/**
 	 * Retrieves a league given the ID.
 	 *
 	 * @return  object
