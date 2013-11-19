@@ -51,7 +51,7 @@ CREATE TABLE `season` (
 CREATE TABLE `player` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `real_name` varchar(128) NOT NULL,
-  `preferred_name` varchar(64) NOT NULL,
+  `preferred_name` varchar(64),
   `pos1` varchar(16),
   `pos2` varchar(16),
   `pos3` varchar(16),
