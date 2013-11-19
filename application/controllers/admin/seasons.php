@@ -52,8 +52,11 @@ class Seasons extends C_Admin {
 		$data = array(
 			'form_action' => 'action_create_season',
 			'title' => 'Create a New Season',
-			'js' => array(),
-			'css' => array('/styles/admin.css'),
+			'js' => array('/js/admin/season_datepicker.js'),
+			'css' => array(
+				'/styles/admin.css',
+				'//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'
+			),
 			'name' => $name,
 			'start_date' => $start_date,
 			'end_date' => $end_date,
@@ -128,8 +131,11 @@ class Seasons extends C_Admin {
 		$data = array(
 			'form_action' => 'action_edit_season',
 			'title' => 'Edit a Season',
-			'js' => array(),
-			'css' => array('/styles/admin.css'),
+			'js' => array('/js/admin/season_datepicker.js'),
+			'css' => array(
+				'/styles/admin.css',
+				'//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'
+			),
 			'id' => $lid,
 			'name' => $name,
 			'start_date' => $start_date,
