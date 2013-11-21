@@ -15,5 +15,5 @@
 					<input type="password" size="20" id="confirm" name="confirm"/>
 				</li>
 			</ul>
-			<input type="submit" value="Create User" />
+			<a href="javascript:void(0)" class="btn btn-primary btn-submit"><?= $submit_message ?></a>
 		</form>

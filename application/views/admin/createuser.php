@@ -13,5 +13,5 @@
 					<input type="password" size="20" id="password" name="password"  maxlength="100"/>
 				</li>
 			</ul>
-			<input type="submit" value="Create User" />
+			<a href="javascript:void(0)" class="btn btn-primary btn-submit"><?= $submit_message ?></a>
 		</form>

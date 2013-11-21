@@ -51,6 +51,7 @@ class News extends C_Admin {
 			),
 			'news_title' => $news_title,
 			'news_message' => $news_message,
+			'submit_message' => 'Submit Article',
 			'sidenav' => self::$user_links
 		);
 
@@ -81,17 +82,25 @@ class News extends C_Admin {
 		{
 			if ($this->news->new_article($news_title, $news_message, $parsed))
 			{
-				$this->index('Article added successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Article Added Successfully!'
+				));
+				return;
 			}
 			else
 			{
-				$this->index('The article has already been added.');
+				echo json_encode(array(
+					'status' => 'warning',
+					'message' => 'This article has already been added.'
+				));
+				return;
 			}
 		}
-		else
-		{
-			$this->new_article($news_title, $news_message);
-			return;
-		}
+
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }

@@ -60,7 +60,7 @@ class Fields extends C_Admin {
 			'region' => $region,
 			'pitch_type' => $pitch_type,
 			'msg' => $msg,
-			'submit_message' => 'Add Season',
+			'submit_message' => 'Add Field',
 			'sidenav' => self::$user_links
 		);
 
@@ -72,7 +72,7 @@ class Fields extends C_Admin {
 	}
 
 	/**
-	 * Action to add a season.
+	 * Action to add a Field.
 	 */
 	function action_create_field()
 	{
@@ -95,16 +95,22 @@ class Fields extends C_Admin {
 		{
 			if ($this->fields->insert($name, $address, $city, $region, $pitch_type))
 			{
-				$this->index('Season added successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Field added successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->new_field('One or more of the fields are invalid.', $name, $address, $city, $region, $pitch_type);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 
 	/**
-	 * Function to edit a season.
+	 * Function to edit a field.
 	 */
 	function edit($fid, $msg='', $name='', $address='', $city='', $region='', $pitch_type='')
 	{
@@ -113,13 +119,13 @@ class Fields extends C_Admin {
 		{
 			$field = $this->fields->retrieve_by_id($fid);
 
-			// If there is no season, error out.
+			// If there is no field, error out.
 			if (!$field)
 			{
-				show_error('No season was found with this ID.');
+				show_error('No field was found with this ID.');
 			}
 
-			$msg = 'Please enter the following information for the new season.';
+			$msg = 'Please enter the following information for the new field.';
 			$name = $field->name;
 			$address = $field->address;
 			$city = $field->city;
@@ -176,11 +182,17 @@ class Fields extends C_Admin {
 		{
 			if ($this->fields->update($fid, $name, $address, $city, $region, $pitch_type))
 			{
-				$this->index('Field Updated successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Field updated successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->edit($fid, 'One or more of the fields are invalid.', $name, $address, $city, $region, $pitch_type);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }

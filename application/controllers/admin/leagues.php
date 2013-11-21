@@ -86,12 +86,18 @@ class Leagues extends C_Admin {
 		{
 			if ($this->league->insert_league($name, $age_cat))
 			{
-				$this->index('Article added successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'League added successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->new_league('One or more of the fields are invalid.', $name, $age_cat);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 
 	/**
@@ -155,11 +161,17 @@ class Leagues extends C_Admin {
 		{
 			if ($this->league->update_league($lid, $name, $age_cat))
 			{
-				$this->index('League Updated successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'League updated successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->edit($lid, 'One or more of the fields are invalid.', $name, $age_cat);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }

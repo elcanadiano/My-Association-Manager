@@ -94,8 +94,8 @@ p.footer{
 	margin: 20px 0 0 0;
 }
 
-#container, #side-nav, #body{
-	margin: 10px;
+#container, #side-nav, #body, .alert {
+	margin:10px;
 }
 
 #container, #side-nav{
@@ -110,4 +110,8 @@ p.footer{
 
 #side-nav > header {
 	border-bottom:1px solid #D0D0D0;
+}
+
+.alert {
+	display:none
 }

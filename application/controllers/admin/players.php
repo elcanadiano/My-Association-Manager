@@ -101,27 +101,38 @@ class Players extends C_Admin {
 		// No password?
 		if (!$password)
 		{
-			$this->new_player('The password field is required.', $real_name, $preferred_name, $pos1, $pos2, $pos3, $email);
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'The password field is required.'
+			));
 			return;
 		}
 
 		// If the passwords don't match
 		if ($password !== $confirm)
 		{
-			$this->new_player('The password fields need to match.', $real_name, $preferred_name, $pos1, $pos2, $pos3, $email);
-			return;
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'The passwords must match.'
+			));
 		}
 
 		if ($this->form_validation->run())
 		{
 			if ($this->players->insert($real_name, $preferred_name, $pos1, $pos2, $pos3, $email, $password))
 			{
-				$this->index('Player added successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Player added successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->new_player('One or more of the fields are invalid.', $real_name, $preferred_name, $pos1, $pos2, $pos3, $email);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 
 	/**
@@ -205,19 +216,27 @@ class Players extends C_Admin {
 		// If the passwords don't match
 		if ($password !== $confirm)
 		{
-			$this->edit($pid, 'The password fields need to match.', $real_name, $preferred_name, $pos1, $pos2, $pos3, $email);
-			return;
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'The passwords must match.'
+			));
 		}
 
 		if ($this->form_validation->run())
 		{
 			if ($this->players->update($pid, $real_name, $preferred_name, $pos1, $pos2, $pos3, $email, $password))
 			{
-				$this->index('Player Updated successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Player updated successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->edit($pid, 'One or more of the fields are invalid.', $real_name, $preferred_name, $pos1, $pos2, $pos3, $email);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }

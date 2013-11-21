@@ -27,5 +27,5 @@
 			<?php if (isset($id)): ?>
 				<input id="id" name="id" type="hidden" name="id" value="<?= $id ?>">
 			<?php endif ?>
-			<input type="submit" value="<?= $submit_message ?>" />
+			<a href="javascript:void(0)" class="btn btn-primary btn-submit"><?= $submit_message ?></a>
 		</form>

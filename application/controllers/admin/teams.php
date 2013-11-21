@@ -97,12 +97,18 @@ class Teams extends C_Admin {
 		{
 			if ($this->teams->insert($name, $homeid, $city, $region))
 			{
-				$this->index('Team added successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Team added successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->new_team('One or more of the fields are invalid.', $name, $homeid, $city, $region);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 
 	/**
@@ -178,11 +184,17 @@ class Teams extends C_Admin {
 		{
 			if ($this->teams->update($tid, $name, $homeid, $city, $region))
 			{
-				$this->index('Team Updated successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Team updated successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->edit($tid, 'One or more of the fields are invalid.', $name, $homeid, $city, $region);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }

@@ -3,9 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<title><?= $title ?></title>
-<?php foreach ($css as $file): ?>
-	<link rel="stylesheet" type="text/css" href="<?= $file ?>">
-<?php endforeach ?>
+	<link rel="stylesheet" type="text/css" href="/styles/bootstrap_alert.min.css">
+	<?php foreach ($css as $file): ?>
+		<link rel="stylesheet" type="text/css" href="<?= $file ?>">
+	<?php endforeach ?>
 </head>
 <body>
 
@@ -26,8 +27,13 @@
 			<li><a href="/admin/seasons">Seasons</a></li>
 		</ul>
 	</nav>
+
+	<div class="alert alert-dismissable" id="alert-message">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<span class="message"></span>
+	</div>
 <?php if (isset($sidenav)): ?>
-	<div id="side-nav">
+	<aside id="side-nav">
 		<header>
 			<h2><?= $sidenav['title'] ?></h2>
 		</header>
@@ -36,6 +42,6 @@
 			<li><a href="<?= $link['url'] ?>"><?= $link['desc'] ?></a></li>
 		<?php endforeach ?>
 		</ul>
-	</div>
+	</aside>
 <?php endif ?>
 	<div id="body">

@@ -11,5 +11,5 @@
 					<textarea id="message" name="message"><?= $news_message ?></textarea>
 				</li>
 			</ul>
-			<input type="submit" value="Submit!" />
+			<a href="javascript:void(0)" class="btn btn-primary btn-submit"><?= $submit_message ?></a>
 		</form>

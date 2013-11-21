@@ -54,6 +54,7 @@ class User extends C_Admin {
 			'css' => array('/styles/admin.css'),
 			'username' => $username,
 			'message' => $msg,
+			'submit_message' => 'Change Password',
 			'sidenav' => self::$user_links
 		);
 
@@ -82,7 +83,10 @@ class User extends C_Admin {
 
 		if ($password !== $confirm)
 		{
-			$this->change_password($username, 'Passwords do not match.');
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'Passwords do not match.'
+			));
 			return;
 		}
 
@@ -90,16 +94,24 @@ class User extends C_Admin {
 		{
 			if (!$this->user->change_password($username, $password))
 			{
-				$this->change_password($username, 'Username does not exist.');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'The username does not exist.'
+				));
 				return;
 			}
 
-			$this->change_password($username, 'Password changed successfully!');
+			echo json_encode(array(
+				'status' => 'success',
+				'message' => 'Password changed successfully!'
+			));
+			return;
 		}
-		else
-		{
-			$this->change_password($username);
-		}
+		
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 
 	/**
@@ -113,6 +125,7 @@ class User extends C_Admin {
 			'css' => array('/styles/admin.css'),
 			'username' => $username,
 			'msg' => $msg,
+			'submit_message' => 'Create User',
 			'sidenav' => self::$user_links
 		);
 
@@ -141,15 +154,23 @@ class User extends C_Admin {
 		{
 			if ($this->user->create($username, $password))
 			{
-				$this->index('User Created Successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'User added successfully!'
+				));
 				return;
 			}
 
-			$this->create('Username already exists.', $username);
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'Username already exists.'
+			));
+			return;
 		}
-		else
-		{
-			$this->create();
-		}
+
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }

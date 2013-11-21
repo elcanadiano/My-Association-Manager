@@ -81,16 +81,30 @@ class Seasons extends C_Admin {
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|xss_clean');
-		$this->form_validation->set_rules('end_date', 'End Date', 'trim|xss_clean');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|required|xss_clean');
 
 		$name = $this->input->post('name');
 		$start_date = $this->input->post('start_date');
 		$end_date = $this->input->post('end_date');
 
+		// If the start date is after the end_date, obviously that won't work.
 		if (strtotime($start_date) > strtotime($end_date))
 		{
-			$this->edit($sid, 'The end date must exceed the start date.', $name, $start_date, $end_date);
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'The end date must be set to a date after the start date.'
+			));
+			return;
+		}
+
+		// A date of 0000-00-00 is garbage.
+		if (strtotime($start_date) == 0 || strtotime($end_date) == 0)
+		{
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'Either the start date or the end date has a value of 0000-00-00'
+			));
 			return;
 		}
 
@@ -98,12 +112,18 @@ class Seasons extends C_Admin {
 		{
 			if ($this->seasons->insert($name, $start_date, $end_date))
 			{
-				$this->index('Season added successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Season added successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->new_season('One or more of the fields are invalid.', $name, $start_date, $end_date);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 
 	/**
@@ -170,9 +190,23 @@ class Seasons extends C_Admin {
 		$start_date = $this->input->post('start_date');
 		$end_date = $this->input->post('end_date');
 
+		// If the start date is after the end_date, obviously that won't work.
 		if (strtotime($start_date) > strtotime($end_date))
 		{
-			$this->edit($sid, 'The end date must exceed the start date.', $name, $start_date, $end_date);
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'The end date must be set to a date after the start date.'
+			));
+			return;
+		}
+
+		// A date of 0000-00-00 is garbage.
+		if (strtotime($start_date) == 0 || strtotime($end_date) == 0)
+		{
+			echo json_encode(array(
+				'status' => 'danger',
+				'message' => 'Either the start date or the end date has a value of 0000-00-00'
+			));
 			return;
 		}
 
@@ -180,11 +214,17 @@ class Seasons extends C_Admin {
 		{
 			if ($this->seasons->update($sid, $name, $start_date, $end_date))
 			{
-				$this->index('season Updated successfully!');
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Season updated successfully!'
+				));
 				return;
 			}
 		}
 
-		$this->edit($sid, 'One or more of the fields are invalid.', $name, $start_date, $end_date);
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
 	}
 }
