@@ -55,7 +55,7 @@ class Seasons extends C_Admin {
 			'js' => array('/js/admin/season_datepicker.js'),
 			'css' => array(
 				'/styles/admin.css',
-				'//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'
+				'/styles/jquery-ui-1.10.3.custom.min.css'
 			),
 			'name' => $name,
 			'start_date' => $start_date,
@@ -154,7 +154,7 @@ class Seasons extends C_Admin {
 			'js' => array('/js/admin/season_datepicker.js'),
 			'css' => array(
 				'/styles/admin.css',
-				'//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'
+				'/styles/jquery-ui-1.10.3.custom.min.css'
 			),
 			'id' => $lid,
 			'name' => $name,
