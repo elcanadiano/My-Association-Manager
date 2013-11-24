@@ -21,6 +21,7 @@
 				<td><?= $row->region ?></td>
 				<td>
 					<a href="/admin/teams/edit/<?= $row->id ?>">Edit</a>
+					<a href="/admin/teams/roster_add/0/<?= $row->id ?>/0">Add to Roster</a>
 					<!--<a href="/admin/leagues/delete/<?= $row->id ?>">Delete</a>-->
 				</td>
 			</tr>

@@ -87,6 +87,7 @@ CREATE TABLE `roster` (
   `tid` integer NOT NULL,
   `sid` integer NOT NULL,
   `squad_number` integer NOT NULL,
+  UNIQUE (`tid`, `sid`, `squad_number`),
   PRIMARY KEY (`pid`, `tid`, `sid`),
   FOREIGN KEY (`tid`) references team(`id`),
   FOREIGN KEY (`sid`) references season(`id`),

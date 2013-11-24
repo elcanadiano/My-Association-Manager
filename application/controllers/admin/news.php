@@ -43,7 +43,7 @@ class News extends C_Admin {
 	function new_article($news_title='', $news_message='')
 	{
 		$data = array(
-			'title' => 'Create a New Admin User',
+			'title' => 'Create a New Article',
 			'js' => array(),
 			'css' => array(
 				'/styles/admin.css',

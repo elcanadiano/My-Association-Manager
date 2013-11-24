@@ -49,6 +49,20 @@ Class Team_m extends CI_Model
 	}
 
 	/**
+	 * Retrieves all the teams for the roster functions.
+	 *
+	 * @return  object
+	 */
+	function retrieve_roster()
+	{
+		$query = $this->db->select('id, name')
+			->from('team')
+			->order_by('name');
+
+		return $query->get()->result();
+	}
+
+	/**
 	 * Inserts a record into the database. Returns TRUE if a successful insert was added.
 	 *
 	 * @return  boolean

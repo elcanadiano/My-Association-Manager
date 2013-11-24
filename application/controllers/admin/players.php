@@ -91,6 +91,12 @@ class Players extends C_Admin {
 
 		$real_name = $this->input->post('real_name');
 		$preferred_name = $this->input->post('preferred_name');
+
+		if (!$preferred_name)
+		{
+			$preferred_name = NULL;
+		}
+
 		$pos1 = $this->input->post('pos1');
 		$pos2 = $this->input->post('pos2');
 		$pos3 = $this->input->post('pos3');

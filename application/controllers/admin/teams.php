@@ -10,6 +10,10 @@ class Teams extends C_Admin {
 			array(
 				'url' => '/admin/teams/new_team',
 				'desc' => 'New Team'
+			),
+			array(
+				'url' => '/admin/teams/roster_add',
+				'desc' => 'Add to Roster'
 			)
 		)
 	);
@@ -19,6 +23,9 @@ class Teams extends C_Admin {
 		parent::__construct();
 		$this->load->model('team_m','teams');
 		$this->load->model('field_m','fields');
+		$this->load->model('roster_m','roster');
+		$this->load->model('player_m','players');
+		$this->load->model('season_m','seasons');
 	}
 
 	// Gets session data, passes info to header, main, and footer.
@@ -187,6 +194,101 @@ class Teams extends C_Admin {
 				echo json_encode(array(
 					'status' => 'success',
 					'message' => 'Team updated successfully!'
+				));
+				return;
+			}
+		}
+
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
+	}
+
+	/**
+	 * Function to add a team member to a roster.
+	 */
+	function roster_add($pid = 0, $tid = 0, $sid = 0)
+	{
+		// Retrieve all the players, teams, or seasons.
+		$players = $this->players->retrieve_roster();
+		$teams = $this->teams->retrieve_roster();
+		$seasons = $this->seasons->retrieve_roster();
+
+		// If there are no players, teams, or seasons...
+		if (!$players || !$teams || !$seasons)
+		{
+			show_error('At least one team, one player, and one season must be added for roster functions to work.');
+		}
+
+		$data = array(
+			'form_action' => 'action_add_roster',
+			'title' => 'Add to Roster',
+			'js' => array(),
+			'css' => array('/styles/admin.css'),
+			'players' => $players,
+			'teams' => $teams,
+			'seasons' => $seasons,
+			'pid' => $pid,
+			'tid' => $tid,
+			'sid' => $sid,
+			'submit_message' => 'Add to Roster',
+			'sidenav' => self::$user_links
+		);
+
+		$this->load->helper(array('form'));
+
+		$this->load->view('admin/header.php', $data);
+		$this->load->view('admin/add_roster.php', $data);
+		$this->load->view('admin/footer.php', $data);
+	}
+
+	/**
+	 * Action function to add a player to a team for a given season (roster).
+	 */
+	function action_add_roster()
+	{
+		// Loading form validation helper.
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('pid', 'Player ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('tid', 'Team ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('sid', 'Season ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('squad_number', 'Squad Number', 'trim|required|xss_clean');
+
+		$pid = $this->input->post('pid');
+		$tid = $this->input->post('tid');
+		$sid = $this->input->post('sid');
+		$squad_number = $this->input->post('squad_number');
+
+		if ($this->form_validation->run())
+		{
+			// Invalid Squad Number
+			if ($squad_number < 1 || $squad_number > 99)
+			{
+				echo json_encode(array(
+					'status' => 'danger',
+					'message' => 'The squad number must be between 0 and 99.'
+				));
+				return;
+			}
+
+			// If an object is returned, that means either the player is already on the roster
+			// or the squad number has been assigned.
+			if ($this->roster->is_invalid_player($pid, $tid, $sid, $squad_number))
+			{
+				echo json_encode(array(
+					'status' => 'danger',
+					'message' => 'Either the player is already on the roster or the squad number has been assigned.'
+				));
+				return;
+			}
+
+			if ($this->roster->insert($pid, $tid, $sid, $squad_number))
+			{
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'Player successfully added to roster!'
 				));
 				return;
 			}
