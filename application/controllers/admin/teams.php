@@ -14,6 +14,10 @@ class Teams extends C_Admin {
 			array(
 				'url' => '/admin/teams/roster_add',
 				'desc' => 'Add to Roster'
+			),
+			array(
+				'url' => '/admin/teams/show_roster',
+				'desc' => 'Show a Roster'
 			)
 		)
 	);
@@ -37,7 +41,7 @@ class Teams extends C_Admin {
 			'title' => 'Teams',
 			'msg' => $msg,
 			'teams' => $teams,
-			'js' => array(),
+			'js' => array(''),
 			'css' => array('/styles/admin.css'),
 			'sidenav' => self::$user_links
 		);
@@ -63,7 +67,7 @@ class Teams extends C_Admin {
 		$data = array(
 			'form_action' => 'action_create_team',
 			'title' => 'Create a New Team',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'fields' => $fields,
 			'name' => $name,
@@ -147,7 +151,7 @@ class Teams extends C_Admin {
 		$data = array(
 			'form_action' => 'action_edit_team',
 			'title' => 'Edit a Team',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'fields' => $fields,
 			'id' => $tid,
@@ -224,7 +228,7 @@ class Teams extends C_Admin {
 		$data = array(
 			'form_action' => 'action_add_roster',
 			'title' => 'Add to Roster',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'players' => $players,
 			'teams' => $teams,
@@ -298,5 +302,66 @@ class Teams extends C_Admin {
 			'status' => 'danger',
 			'message' => 'One or more of the fields are invalid.'
 		));
+	}
+
+	/**
+	 * Function to show the roster.
+	 */
+	function show_roster()
+	{
+		// Retrieve all the players, teams, or seasons.
+		$teams = $this->teams->retrieve_roster();
+		$seasons = $this->seasons->retrieve_roster();
+
+		// If there are no players, teams, or seasons...
+		if (!$teams || !$seasons)
+		{
+			show_error('At least one team, one player, and one season must be added for roster functions to work.');
+		}
+
+		$data = array(
+			'form_action' => 'action_show_roster',
+			'title' => 'Show Roster',
+			'js' => array('/js/admin/show_roster.js'),
+			'css' => array('/styles/admin.css'),
+			'teams' => $teams,
+			'seasons' => $seasons,
+			'submit_message' => 'Add to Roster',
+			'sidenav' => self::$user_links
+		);
+
+		$this->load->helper(array('form'));
+
+		$this->load->view('admin/header.php', $data);
+		$this->load->view('admin/show_roster.php', $data);
+		$this->load->view('admin/footer.php', $data);
+	}
+
+	/**
+	 * Action function to completely show a roster.
+	 */
+	function action_show_roster()
+	{
+		// Loading form validation helper.
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('tid', 'Team ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('sid', 'Season ID', 'trim|required|xss_clean');
+
+		$tid = $this->input->post('tid');
+		$sid = $this->input->post('sid');
+
+		if ($this->form_validation->run())
+		{
+			// Get the team roster.
+			$res = array(
+				'players' => $this->roster->view_team_roster($tid, $sid)
+			);
+
+			$this->load->view('admin/show_teams.php', $res);
+			return;
+		}
+
+		echo 'Please select a Team and a Season for the given team.';
 	}
 }

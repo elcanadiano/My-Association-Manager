@@ -52,7 +52,7 @@ class Fields extends C_Admin {
 		$data = array(
 			'form_action' => 'action_create_field',
 			'title' => 'Add a new Field',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'name' => $name,
 			'address' => $address,
@@ -136,7 +136,7 @@ class Fields extends C_Admin {
 		$data = array(
 			'form_action' => 'action_edit_field',
 			'title' => 'Edit a Field',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'id' => $fid,
 			'name' => $name,

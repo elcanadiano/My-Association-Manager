@@ -44,7 +44,7 @@ class News extends C_Admin {
 	{
 		$data = array(
 			'title' => 'Create a New Article',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array(
 				'/styles/admin.css',
 				'/styles/news.css'

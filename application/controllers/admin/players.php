@@ -52,7 +52,7 @@ class Players extends C_Admin {
 		$data = array(
 			'form_action' => 'action_create_player',
 			'title' => 'Create a New Player',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'real_name' => $real_name,
 			'preferred_name' => $preferred_name,
@@ -169,7 +169,7 @@ class Players extends C_Admin {
 		$data = array(
 			'form_action' => 'action_edit_player',
 			'title' => 'Edit a player',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'id' => $pid,
 			'real_name' => $real_name,

@@ -8,7 +8,6 @@
 	<script src="/js/jquery-2.0.3.min.js"></script>
 <!--<![endif]-->
 <script src="/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="/js/admin/admin.js"></script>
 <?php foreach ($js as $file): ?>
 	<script src="<?= $file ?>"></script>
 <?php endforeach ?>

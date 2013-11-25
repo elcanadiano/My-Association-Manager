@@ -50,7 +50,7 @@ class User extends C_Admin {
 	{
 		$data = array(
 			'title' => 'Change password for ' . $username,
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'username' => $username,
 			'message' => $msg,
@@ -121,7 +121,7 @@ class User extends C_Admin {
 	{
 		$data = array(
 			'title' => 'Create a New Admin User',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'username' => $username,
 			'msg' => $msg,

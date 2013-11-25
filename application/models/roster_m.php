@@ -22,20 +22,20 @@ Class Roster_m extends CI_Model
 	 *
 	 * @return  object
 	 */
-	function retrieve_by_tid_sid($tid, $sid)
+	function view_team_roster($tid, $sid)
 	{
 		$where = array(
-			't.tid' => $tid,
-			's.sid' => $sid
+			't.id' => $tid,
+			's.id' => $sid
 		);
 
-		$query = $this->db->select('coalesce(p.preferred_name, p.real_name), p.id AS pid t.name AS team_name, t.id AS tid, s.name AS season_name, s.id AS sid, r.squad_number')
+		$query = $this->db->select('coalesce(`preferred_name`, `real_name`) AS player_name, t.name AS `team_name`, s.name AS `season_name`, `squad_number`, `pos1`, `pos2`, `pos3`', FALSE)
 			->from('roster r')
-			->join('player p', 'r.pid = p.pid', 'inner')
-			->join('team t', 'r.tid = t.tid', 'inner')
-			->join('season s', 'r.sid = s.sid', 'inner')
+			->join('player p', 'r.pid = p.id', 'inner')
+			->join('team t', 'r.tid = t.id', 'inner')
+			->join('season s', 'r.sid = s.id', 'inner')
 			->where($where)
-			->order_by('pid, tid, sid');
+			->order_by('r.squad_number');
 
 		return $query->get()->result();
 	}

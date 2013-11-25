@@ -52,7 +52,7 @@ class Leagues extends C_Admin {
 		$data = array(
 			'form_action' => 'action_create_league',
 			'title' => 'Create a New League',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'name' => $name,
 			'age_cat' => $age_cat,
@@ -124,7 +124,7 @@ class Leagues extends C_Admin {
 		$data = array(
 			'form_action' => 'action_edit_league',
 			'title' => 'Edit a league',
-			'js' => array(),
+			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'id' => $lid,
 			'name' => $name,

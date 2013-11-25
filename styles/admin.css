@@ -112,7 +112,7 @@ p.footer{
 	border-bottom:1px solid #D0D0D0;
 }
 
-.alert {
+.alert, #show-roster {
 	display:none
 }
 

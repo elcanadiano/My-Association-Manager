@@ -57,6 +57,7 @@ CREATE TABLE `player` (
   `pos3` varchar(16),
   `email` varchar(128) NOT NULL,
   `password` varchar(128) NOT NULL,
+  UNIQUE (`email`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
