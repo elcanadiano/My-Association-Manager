@@ -17,6 +17,7 @@
 				<td><?= $row->age_cat ?></td>
 				<td>
 					<a href="/admin/leagues/edit/<?= $row->id ?>">Edit</a>
+					<a href="/admin/leagues/add_team/0/<?= $row->id ?>/0">Add Team</a>
 					<!--<a href="/admin/leagues/delete/<?= $row->id ?>">Delete</a>-->
 				</td>
 			</tr>

@@ -31,6 +31,21 @@ Class League_m extends CI_Model
 	}
 
 	/**
+	 * Retrieves all the players for the roster functions.
+	 *
+	 * @return  object
+	 */
+	function retrieve_roster()
+	{
+		// By not adding false, CI wll screw over the coalesce function.
+		$query = $this->db->select('id, name, age_cat')
+			->from('league')
+			->order_by('id');
+
+		return $query->get()->result();
+	}
+
+	/**
 	 * Inserts a record into the database. Returns TRUE if a successful insert was added.
 	 *
 	 * @return  boolean

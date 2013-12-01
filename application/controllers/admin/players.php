@@ -10,6 +10,10 @@ class Players extends C_Admin {
 			array(
 				'url' => '/admin/players/new_player',
 				'desc' => 'New Player'
+			),
+			array(
+				'url' => '/admin/teams/roster_add',
+				'desc' => 'Add to Roster'
 			)
 		)
 	);
@@ -121,6 +125,7 @@ class Players extends C_Admin {
 				'status' => 'danger',
 				'message' => 'The passwords must match.'
 			));
+			return;
 		}
 
 		if ($this->form_validation->run())

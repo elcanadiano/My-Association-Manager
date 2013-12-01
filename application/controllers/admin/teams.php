@@ -18,6 +18,10 @@ class Teams extends C_Admin {
 			array(
 				'url' => '/admin/teams/show_roster',
 				'desc' => 'Show a Roster'
+			),
+			array(
+				'url' => '/admin/leagues/add_team',
+				'desc' => 'Add Team to League'
 			)
 		)
 	);
@@ -326,7 +330,7 @@ class Teams extends C_Admin {
 			'css' => array('/styles/admin.css'),
 			'teams' => $teams,
 			'seasons' => $seasons,
-			'submit_message' => 'Add to Roster',
+			'submit_message' => 'Show Roster',
 			'sidenav' => self::$user_links
 		);
 

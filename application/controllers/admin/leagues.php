@@ -10,6 +10,14 @@ class Leagues extends C_Admin {
 			array(
 				'url' => '/admin/leagues/new_league',
 				'desc' => 'New League'
+			),
+			array(
+				'url' => '/admin/leagues/add_team',
+				'desc' => 'Add Team to League'
+			),
+			array(
+				'url' => '/admin/leagues/show_standings',
+				'desc' => 'View Standings'
 			)
 		)
 	);
@@ -17,7 +25,10 @@ class Leagues extends C_Admin {
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->model('team_m','teams');
 		$this->load->model('league_m','league');
+		$this->load->model('season_m','seasons');
+		$this->load->model('standings_m','standings');
 	}
 
 	// Gets session data, passes info to header, main, and footer.
@@ -173,5 +184,126 @@ class Leagues extends C_Admin {
 			'status' => 'danger',
 			'message' => 'One or more of the fields are invalid.'
 		));
+	}
+
+	function add_team($tid = 0, $lid = 0, $sid = 0)
+	{
+		// Retrieve all the players, teams, or seasons.
+		$teams = $this->teams->retrieve_roster();
+		$leagues = $this->league->retrieve_roster();
+		$seasons = $this->seasons->retrieve_roster();
+
+		// If there are no players, teams, or seasons...
+		if (!$teams || !$leagues || !$seasons)
+		{
+			show_error('At least one team, one league, and one season must be added for standings functions to work.');
+		}
+
+		$data = array(
+			'form_action' => 'action_add_team',
+			'title' => 'Add to League',
+			'js' => array('/js/admin/admin.js'),
+			'css' => array('/styles/admin.css'),
+			'teams' => $teams,
+			'leagues' => $leagues,
+			'seasons' => $seasons,
+			'tid' => $tid,
+			'lid' => $lid,
+			'sid' => $sid,
+			'submit_message' => 'Add to League',
+			'sidenav' => self::$user_links
+		);
+
+		$this->load->helper(array('form'));
+
+		$this->load->view('admin/header.php', $data);
+		$this->load->view('admin/add_standings.php', $data);
+		$this->load->view('admin/footer.php', $data);
+	}
+
+	function action_add_team()
+	{
+		// Loading form validation helper.
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('tid', 'Team ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('lid', 'Player ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('sid', 'Season ID', 'trim|required|xss_clean');
+
+		$tid = $this->input->post('tid');
+		$lid = $this->input->post('lid');
+		$sid = $this->input->post('sid');
+
+		if ($this->form_validation->run())
+		{
+			if ($this->standings->insert($tid, $lid, $sid))
+			{
+				echo json_encode(array(
+					'status' => 'success',
+					'message' => 'The team has successfully been added to the league.'
+				));
+				return;
+			}
+		}
+
+		echo json_encode(array(
+			'status' => 'danger',
+			'message' => 'One or more of the fields are invalid.'
+		));
+	}
+
+	function show_standings()
+	{
+		// Retrieve all the players, teams, or seasons.
+		$leagues = $this->league->retrieve_roster();
+		$seasons = $this->seasons->retrieve_roster();
+
+		// If there are no players, teams, or seasons...
+		if (!$leagues || !$seasons)
+		{
+			show_error('At least one league, one team, and one season must be added for standings functions to work.');
+		}
+
+		$data = array(
+			'form_action' => 'action_show_standings',
+			'title' => 'View Standings',
+			'js' => array('/js/admin/show_roster.js'),
+			'css' => array('/styles/admin.css'),
+			'leagues' => $leagues,
+			'seasons' => $seasons,
+			'submit_message' => 'Show Standings',
+			'sidenav' => self::$user_links
+		);
+
+		$this->load->helper(array('form'));
+
+		$this->load->view('admin/header.php', $data);
+		$this->load->view('admin/show_standings.php', $data);
+		$this->load->view('admin/footer.php', $data);
+	}
+
+	function action_show_standings()
+	{
+		// Loading form validation helper.
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('lid', 'League ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('sid', 'Season ID', 'trim|required|xss_clean');
+
+		$lid = $this->input->post('lid');
+		$sid = $this->input->post('sid');
+
+		if ($this->form_validation->run())
+		{
+			// Get the team roster.
+			$res = array(
+				'teams' => $this->standings->retrieve($lid, $sid)
+			);
+
+			$this->load->view('admin/action_show_standings.php', $res);
+			return;
+		}
+
+		echo 'Please select a Team and a Season for the given team.';
 	}
 }
