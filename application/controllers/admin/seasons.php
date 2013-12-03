@@ -20,35 +20,29 @@ class Seasons extends C_Admin {
 		$this->load->model('season_m','seasons');
 	}
 
-	// Gets session data, passes info to header, main, and footer.
-	function index($msg = '')
+	/**
+	 * Index function to show all the seasons.
+	 */
+	function index()
 	{
 		$seasons = $this->seasons->retrieve();
 
 		$data = array(
 			'title' => 'Seasons',
-			'msg' => $msg,
 			'seasons' => $seasons,
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
 			'sidenav' => self::$user_links
 		);
-		$this->load->view('admin/header.php', $data);
+
 		$this->load->view('admin/show_all_seasons.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
 	 * Page to create a league.
 	 */
-	function new_season($msg='', $name='', $start_date='', $end_date='')
+	function new_season()
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
-		{
-			$msg = 'Please enter the following information for the new season.';
-		}
-
 		$data = array(
 			'form_action' => 'action_create_season',
 			'title' => 'Create a New Season',
@@ -57,19 +51,17 @@ class Seasons extends C_Admin {
 				'/styles/admin.css',
 				'/styles/jquery-ui-1.10.3.custom.min.css'
 			),
-			'name' => $name,
-			'start_date' => $start_date,
-			'end_date' => $end_date,
-			'msg' => $msg,
+			'name' => '',
+			'start_date' => '',
+			'end_date' => '',
+			'msg' => 'Please enter the following information for the new season.',
 			'submit_message' => 'Add Season',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/season_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -129,23 +121,14 @@ class Seasons extends C_Admin {
 	/**
 	 * Function to edit a season.
 	 */
-	function edit($lid, $msg='', $name='', $start_date='', $end_date='')
+	function edit($lid)
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
+		$season = $this->seasons->retrieve_by_id($lid);
+
+		// If there is no season, error out.
+		if (!$season)
 		{
-			$season = $this->seasons->retrieve_by_id($lid);
-
-			// If there is no season, error out.
-			if (!$season)
-			{
-				show_error('No season was found with this ID.');
-			}
-
-			$msg = 'Please enter the following information for the new season.';
-			$name = $season->name;
-			$start_date = $season->start_date;
-			$end_date = $season->end_date;
+			show_error('No season was found with this ID.');
 		}
 
 		$data = array(
@@ -157,19 +140,17 @@ class Seasons extends C_Admin {
 				'/styles/jquery-ui-1.10.3.custom.min.css'
 			),
 			'id' => $lid,
-			'name' => $name,
-			'start_date' => $start_date,
-			'end_date' => $end_date,
-			'msg' => $msg,
+			'name' => $season->name,
+			'start_date' => $season->start_date,
+			'end_date' => $season->end_date,
+			'msg' => 'Please enter the following information for the new season.',
 			'submit_message' => 'Edit Season',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/season_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**

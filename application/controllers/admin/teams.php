@@ -36,37 +36,37 @@ class Teams extends C_Admin {
 		$this->load->model('season_m','seasons');
 	}
 
-	// Gets session data, passes info to header, main, and footer.
-	function index($msg = '')
+	/**
+	 * The index function lists all of the teams, along with its home field name.
+	 */
+	function index()
 	{
 		$teams = $this->teams->retrieve_with_field();
 
 		$data = array(
 			'title' => 'Teams',
-			'msg' => $msg,
 			'teams' => $teams,
 			'js' => array(''),
 			'css' => array('/styles/admin.css'),
 			'sidenav' => self::$user_links
 		);
-		$this->load->view('admin/header.php', $data);
+
 		$this->load->view('admin/show_all_teams.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
 	 * Page to create a league.
 	 */
-	function new_team($msg='', $name='', $homeid='', $city='', $region='')
+	function new_team()
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
-		{
-			$msg = 'Please enter the information regarding the new team.';
-		}
-
 		// Grab the list of fields for the dropdown.
 		$fields = $this->fields->retrieve_id_name();
+
+		// If there were no fields, then error out.
+		if (!$fields)
+		{
+			show_error('You must add a field before adding a team.');
+		}
 
 		$data = array(
 			'form_action' => 'action_create_team',
@@ -74,20 +74,18 @@ class Teams extends C_Admin {
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'fields' => $fields,
-			'name' => $name,
-			'homeid' => $homeid,
-			'city' => $city,
-			'region' => $region,
-			'msg' => $msg,
+			'name' => '',
+			'homeid' => '',
+			'city' => '',
+			'region' => '',
+			'msg' => 'Please enter the information regarding the new team.',
 			'submit_message' => 'Add Team',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/team_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -129,28 +127,24 @@ class Teams extends C_Admin {
 	/**
 	 * Function to edit a team.
 	 */
-	function edit($tid, $msg='', $name='', $homeid='', $city='', $region='')
+	function edit($tid)
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
+		$team = $this->teams->retrieve_by_id($tid);
+
+		// If there is no team, error out.
+		if (!$team)
 		{
-			$team = $this->teams->retrieve_by_id($tid);
-
-			// If there is no team, error out.
-			if (!$team)
-			{
-				show_error('No team was found with this ID.');
-			}
-
-			$msg = 'Please enter the following information for the new team.';
-			$name = $team->name;
-			$homeid = $team->homeid;
-			$city = $team->city;
-			$region = $team->region;
+			show_error('No team was found with this ID.');
 		}
 
 		// Grab the list of fields for the dropdown.
 		$fields = $this->fields->retrieve_id_name();
+
+		// If there were no fields, then error out.
+		if (!$fields)
+		{
+			show_error('You must add a field before adding a team.');
+		}
 
 		$data = array(
 			'form_action' => 'action_edit_team',
@@ -159,20 +153,18 @@ class Teams extends C_Admin {
 			'css' => array('/styles/admin.css'),
 			'fields' => $fields,
 			'id' => $tid,
-			'name' => $name,
-			'homeid' => $homeid,
-			'city' => $city,
-			'region' => $region,
-			'msg' => $msg,
+			'name' => $team->name,
+			'homeid' => $team->homeid,
+			'city' => $team->city,
+			'region' => $team->region,
+			'msg' => 'Please enter the following information for the new team.',
 			'submit_message' => 'Edit Team',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/team_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -246,9 +238,7 @@ class Teams extends C_Admin {
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/add_roster.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -336,13 +326,12 @@ class Teams extends C_Admin {
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/show_roster.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Action function to completely show a roster.
+	 * Action function to completely show a roster. If no roster exists for a team for that season,
+	 * a friendly error is shown.
 	 */
 	function action_show_roster()
 	{
@@ -358,11 +347,11 @@ class Teams extends C_Admin {
 		if ($this->form_validation->run())
 		{
 			// Get the team roster.
-			$res = array(
+			$data = array(
 				'players' => $this->roster->view_team_roster($tid, $sid)
 			);
 
-			$this->load->view('admin/show_teams.php', $res);
+			$this->load->view('admin/show_teams.php', $data);
 			return;
 		}
 

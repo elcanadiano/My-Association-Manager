@@ -24,60 +24,52 @@ class Players extends C_Admin {
 		$this->load->model('player_m','players');
 	}
 
-	// Gets session data, passes info to header, main, and footer.
-	function index($msg = '')
+	/**
+	 * Index function that lists all the players in the database.
+	 */
+	function index()
 	{
 		$players = $this->players->retrieve();
 
 		$data = array(
 			'title' => 'Players',
-			'msg' => $msg,
 			'players' => $players,
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
 			'sidenav' => self::$user_links
 		);
-		$this->load->view('admin/header.php', $data);
+
 		$this->load->view('admin/show_all_players.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Page to create a league.
+	 * Page to add a player.
 	 */
-	function new_player($msg='', $real_name='', $preferred_name='', $pos1='', $pos2='', $pos3='', $email='')
+	function new_player()
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
-		{
-			$msg = 'Please enter the information regarding the new player.';
-		}
-
 		$data = array(
 			'form_action' => 'action_create_player',
 			'title' => 'Create a New Player',
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
-			'real_name' => $real_name,
-			'preferred_name' => $preferred_name,
-			'pos1' => $pos1,
-			'pos2' => $pos2,
-			'pos3' => $pos3,
-			'email' => $email,
-			'msg' => $msg,
+			'real_name' => '',
+			'preferred_name' => '',
+			'pos1' => '',
+			'pos2' => '',
+			'pos3' => '',
+			'email' => '',
+			'msg' => 'Please enter the information regarding the new player.',
 			'submit_message' => 'Add Player',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/player_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Action to add a player.
+	 * Action function to add a player.
 	 */
 	function action_create_player()
 	{
@@ -96,6 +88,8 @@ class Players extends C_Admin {
 		$real_name = $this->input->post('real_name');
 		$preferred_name = $this->input->post('preferred_name');
 
+		// If the preferred name field is blank, set it to NULL because we will need to use NULL fields
+		// for coalesce.
 		if (!$preferred_name)
 		{
 			$preferred_name = NULL;
@@ -118,12 +112,12 @@ class Players extends C_Admin {
 			return;
 		}
 
-		// If the passwords don't match
+		// If the passwords don't match.
 		if ($password !== $confirm)
 		{
 			echo json_encode(array(
 				'status' => 'danger',
-				'message' => 'The passwords must match.'
+				'message' => 'The password fields must match.'
 			));
 			return;
 		}
@@ -149,26 +143,14 @@ class Players extends C_Admin {
 	/**
 	 * Function to edit a player.
 	 */
-	function edit($pid, $msg='', $real_name='', $preferred_name='', $pos1='', $pos2='', $pos3='', $email='')
+	function edit($pid)
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
+		$player = $this->players->retrieve_by_id($pid);
+
+		// If there is no player, error out.
+		if (!$player)
 		{
-			$player = $this->players->retrieve_by_id($pid);
-
-			// If there is no player, error out.
-			if (!$player)
-			{
-				show_error('No player was found with this ID.');
-			}
-
-			$msg = 'Please enter the following information for the new player.';
-			$real_name = $player->real_name;
-			$preferred_name = $player->preferred_name;
-			$pos1 = $player->pos1;
-			$pos2 = $player->pos2;
-			$pos3 = $player->pos3;
-			$email = $player->email;
+			show_error('No player was found with this ID.');
 		}
 
 		$data = array(
@@ -177,23 +159,21 @@ class Players extends C_Admin {
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'id' => $pid,
-			'real_name' => $real_name,
-			'preferred_name' => $preferred_name,
-			'pos1' => $pos1,
-			'pos2' => $pos2,
-			'pos3' => $pos3,
-			'email' => $email,
+			'real_name' => $player->real_name,
+			'preferred_name' => $player->preferred_name,
+			'pos1' => $player->pos1,
+			'pos2' => $player->pos2,
+			'pos3' => $player->pos3,
+			'email' => $player->email,
 			'password' => '',
-			'msg' => $msg,
+			'msg' => 'Please enter the new information for ' . $player->real_name . '.',
 			'submit_message' => 'Edit Player',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/player_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**

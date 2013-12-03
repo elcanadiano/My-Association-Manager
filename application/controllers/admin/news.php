@@ -15,9 +15,9 @@ class News extends C_Admin {
 	);
 
 	/**
-	 * Index page.
+	 * Index page. Default shows all of the news articles written.
 	 */
-	function index($msg='')
+	function index()
 	{
 		$query_result = $this->news->retrieve();
 
@@ -25,20 +25,17 @@ class News extends C_Admin {
 			'title' => 'News',
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
-			'msg' => $msg,
 			'query_result' => $query_result,
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/show_all_news.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Page to create a user.
+	 * Page to add an article.
 	 */
 	function new_article($news_title='', $news_message='')
 	{
@@ -57,13 +54,11 @@ class News extends C_Admin {
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/newarticle.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
-	 * Action to store an article.
+	 * Action function to insert an article.
 	 */
 	function action_add_article()
 	{

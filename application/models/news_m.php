@@ -37,13 +37,22 @@ Class News_m extends CI_Model
 	 * 
 	 * @return  object
 	 */
-	function retrieve_one($id)
+	function retrieve_by_id($id)
 	{
 		$query = $this->db->select('*')
 			->from('news')
 			->where('id', $id);
 
-		return $query->get()->result();
+
+		$result = $query->get()->result();
+
+		// If there is a record, return the first element. Otherwise, return NULL.
+		if ($result)
+		{
+			return $result[0];
+		}
+
+		return NULL;
 	}
 
 	/**

@@ -1,6 +1,4 @@
-<?php if($msg): ?>
-	<p><?= $msg ?></p>
-<?php endif ?>
+<?php $this->load->view('admin/header.php') ?>
 
 <?php if(!isset($query_result) || !$query_result): ?>
 	<p>There are no articles. Why not add an article?</p>
@@ -24,3 +22,5 @@
 		<?php endforeach ?>
 	</table>
 <?php endif ?>
+
+<?php $this->load->view('admin/footer.php') ?>

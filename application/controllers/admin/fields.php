@@ -21,54 +21,44 @@ class Fields extends C_Admin {
 	}
 
 	// Gets session data, passes info to header, main, and footer.
-	function index($msg = '')
+	function index()
 	{
 		$fields = $this->fields->retrieve();
 
 		$data = array(
 			'title' => 'Fields',
-			'msg' => $msg,
 			'fields' => $fields,
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
 			'sidenav' => self::$user_links
 		);
-		$this->load->view('admin/header.php', $data);
+
 		$this->load->view('admin/show_all_fields.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
 	 * Page to create a league.
 	 */
-	function new_field($msg='', $name='', $address='', $city='', $region='', $pitch_type='')
+	function new_field()
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
-		{
-			$msg = 'Please enter the required fields of the new fields.';
-		}
-
 		$data = array(
 			'form_action' => 'action_create_field',
 			'title' => 'Add a new Field',
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
-			'name' => $name,
-			'address' => $address,
-			'city' => $city,
-			'region' => $region,
-			'pitch_type' => $pitch_type,
-			'msg' => $msg,
+			'name' => '',
+			'address' => '',
+			'city' => '',
+			'region' => '',
+			'pitch_type' => '',
+			'msg' => 'Please enter the following information for the new field.',
 			'submit_message' => 'Add Field',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/field_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -112,25 +102,14 @@ class Fields extends C_Admin {
 	/**
 	 * Function to edit a field.
 	 */
-	function edit($fid, $msg='', $name='', $address='', $city='', $region='', $pitch_type='')
+	function edit($fid)
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
+		$field = $this->fields->retrieve_by_id($fid);
+
+		// If there is no field, error out.
+		if (!$field)
 		{
-			$field = $this->fields->retrieve_by_id($fid);
-
-			// If there is no field, error out.
-			if (!$field)
-			{
-				show_error('No field was found with this ID.');
-			}
-
-			$msg = 'Please enter the following information for the new field.';
-			$name = $field->name;
-			$address = $field->address;
-			$city = $field->city;
-			$region = $field->region;
-			$pitch_type = $field->pitch_type;
+			show_error('No field was found with this ID.');
 		}
 
 		$data = array(
@@ -139,21 +118,19 @@ class Fields extends C_Admin {
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'id' => $fid,
-			'name' => $name,
-			'address' => $address,
-			'city' => $city,
-			'region' => $region,
-			'pitch_type' => $pitch_type,
-			'msg' => $msg,
+			'name' => $field->name,
+			'address' => $field->address,
+			'city' => $field->city,
+			'region' => $field->region,
+			'pitch_type' => $field->pitch_type,
+			'msg' => 'Please enter the new information for ' . $field->name . '.',
 			'submit_message' => 'Edit Field',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/field_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**

@@ -31,52 +31,44 @@ class Leagues extends C_Admin {
 		$this->load->model('standings_m','standings');
 	}
 
-	// Gets session data, passes info to header, main, and footer.
-	function index($msg = '')
+	/**
+	 * Loads an index page that displays all the leagues in the organization (defunct or not)
+	 */
+	function index()
 	{
 		$leagues = $this->league->retrieve();
 
 		$data = array(
 			'title' => 'Leagues',
-			'msg' => $msg,
 			'leagues' => $leagues,
 			'js' => array(),
 			'css' => array('/styles/admin.css'),
 			'sidenav' => self::$user_links
 		);
-		$this->load->view('admin/header.php', $data);
+
 		$this->load->view('admin/show_all_leagues.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
 	 * Page to create a league.
 	 */
-	function new_league($msg='', $name='', $age_cat='')
+	function new_league()
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
-		{
-			$msg = 'Please enter the following information for the new league.';
-		}
-
 		$data = array(
 			'form_action' => 'action_create_league',
 			'title' => 'Create a New League',
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
-			'name' => $name,
-			'age_cat' => $age_cat,
-			'msg' => $msg,
+			'name' => '',
+			'age_cat' => '',
+			'msg' => 'Please enter the following information for the new league.',
 			'submit_message' => 'Add League',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/league_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -114,22 +106,14 @@ class Leagues extends C_Admin {
 	/**
 	 * Function to edit a league.
 	 */
-	function edit($lid, $msg='', $name='', $age_cat='')
+	function edit($lid)
 	{
-		// If there is no message, set it to the default.
-		if (!$msg)
+		$league = $this->league->retrieve_by_id($lid);
+
+		// If there is no league, error out.
+		if (!$league)
 		{
-			$league = $this->league->retrieve_by_id($lid);
-
-			// If there is no league, error out.
-			if (!$league)
-			{
-				show_error('No league was found with this ID.');
-			}
-
-			$msg = 'Please enter the following information for the new league.';
-			$name = $league->name;
-			$age_cat = $league->age_cat;
+			show_error('No league was found with this ID.');
 		}
 
 		$data = array(
@@ -138,18 +122,16 @@ class Leagues extends C_Admin {
 			'js' => array('/js/admin/admin.js'),
 			'css' => array('/styles/admin.css'),
 			'id' => $lid,
-			'name' => $name,
-			'age_cat' => $age_cat,
-			'msg' => $msg,
+			'name' => $league->name,
+			'age_cat' => $league->age_cat,
+			'msg' => 'Please enter the new information for ' . $league->name . '.',
 			'submit_message' => 'Edit League',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/league_edit.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
 	/**
@@ -186,6 +168,9 @@ class Leagues extends C_Admin {
 		));
 	}
 
+	/**
+	 * Function to add a team to a league for a season.
+	 */
 	function add_team($tid = 0, $lid = 0, $sid = 0)
 	{
 		// Retrieve all the players, teams, or seasons.
@@ -210,17 +195,19 @@ class Leagues extends C_Admin {
 			'tid' => $tid,
 			'lid' => $lid,
 			'sid' => $sid,
+			'msg' => 'Please select the team that you wish to add to the league for the season.',
 			'submit_message' => 'Add to League',
 			'sidenav' => self::$user_links
 		);
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/add_standings.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
+	/**
+	 * Action function to add a team to a league for a season.
+	 */
 	function action_add_team()
 	{
 		// Loading form validation helper.
@@ -252,6 +239,9 @@ class Leagues extends C_Admin {
 		));
 	}
 
+	/**
+	 * Function for an admin to view a standings.
+	 */
 	function show_standings()
 	{
 		// Retrieve all the players, teams, or seasons.
@@ -277,11 +267,14 @@ class Leagues extends C_Admin {
 
 		$this->load->helper(array('form'));
 
-		$this->load->view('admin/header.php', $data);
 		$this->load->view('admin/show_standings.php', $data);
-		$this->load->view('admin/footer.php', $data);
 	}
 
+	/**
+	 * Action function to fetch the standings for a league for a given season.
+	 *
+	 * Returns a friendly message if there are no teams in that league for a given season.
+	 */
 	function action_show_standings()
 	{
 		// Loading form validation helper.
@@ -296,11 +289,11 @@ class Leagues extends C_Admin {
 		if ($this->form_validation->run())
 		{
 			// Get the team roster.
-			$res = array(
+			$data = array(
 				'teams' => $this->standings->retrieve($lid, $sid)
 			);
 
-			$this->load->view('admin/action_show_standings.php', $res);
+			$this->load->view('admin/action_show_standings.php', $data);
 			return;
 		}
 

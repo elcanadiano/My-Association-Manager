@@ -1,6 +1,4 @@
-<?php if($msg): ?>
-	<p><?= $msg ?></p>
-<?php endif ?>
+<?php $this->load->view('admin/header.php') ?>
 
 <?php if(!$teams): ?>
 	<p>You currently do not have any teams set up. Why not create one?</p>
@@ -29,3 +27,5 @@
 		<?php endforeach ?>
 	</table>
 <?php endif ?>
+
+<?php $this->load->view('admin/footer.php') ?>

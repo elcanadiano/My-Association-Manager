@@ -45,7 +45,15 @@ Class Team_m extends CI_Model
 			->where('id', $id)
 			->limit(1);
 
-		return $query->get()->result()[0];
+		$result = $query->get()->result();
+
+		// If there is a record, return the first element. Otherwise, return NULL.
+		if ($result)
+		{
+			return $result[0];
+		}
+
+		return NULL;
 	}
 
 	/**

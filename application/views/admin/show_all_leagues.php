@@ -1,6 +1,4 @@
-<?php if($msg): ?>
-	<p><?= $msg ?></p>
-<?php endif ?>
+<?php $this->load->view('admin/header.php') ?>
 
 <?php if(!$leagues): ?>
 	<p>You currently do not have any leagues. Why not create one?</p>
@@ -24,3 +22,5 @@
 		<?php endforeach ?>
 	</table>
 <?php endif ?>
+
+<?php $this->load->view('admin/footer.php') ?>

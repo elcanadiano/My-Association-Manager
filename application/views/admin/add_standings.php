@@ -1,3 +1,9 @@
+<?php $this->load->view('admin/header.php') ?>
+
+<?php if(isset($msg)): ?>
+	<p><?= $msg ?></p>
+<?php endif ?>
+
 <?= form_open('admin/leagues/' . $form_action); ?>
 	<ul class='create-user'>
 		<li>
@@ -35,3 +41,5 @@
 	<?php endif ?>
 	<a href="javascript:void(0)" class="btn btn-primary btn-submit"><?= $submit_message ?></a>
 </form>
+
+<?php $this->load->view('admin/footer.php') ?>

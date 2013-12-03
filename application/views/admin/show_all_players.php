@@ -1,6 +1,4 @@
-<?php if($msg): ?>
-	<p><?= $msg ?></p>
-<?php endif ?>
+<?php $this->load->view('admin/header.php') ?>
 
 <?php if(!$players): ?>
 	<p>You currently do not have any players. Why not register one?</p>
@@ -30,3 +28,5 @@
 		<?php endforeach ?>
 	</table>
 <?php endif ?>
+
+<?php $this->load->view('admin/footer.php') ?>

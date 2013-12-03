@@ -1,3 +1,5 @@
+<?php $this->load->view('admin/header.php') ?>
+
 <p>Please select the team name and the roster.</p>
 <?= form_open('admin/teams/' . $form_action); ?>
 	<ul class='create-user'>
@@ -24,3 +26,5 @@
 </form>
 
 <div id="show-roster"></div>
+
+<?php $this->load->view('admin/footer.php') ?>
