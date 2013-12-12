@@ -44,7 +44,7 @@ CREATE TABLE `season` (
   `name` varchar(32) NOT NULL,
   `start_date` date,
   `end_date` date,
-  UNIQUE (`name`, `start_date`, `end_date`),
+  UNIQUE (`name`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
