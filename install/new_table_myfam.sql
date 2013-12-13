@@ -65,8 +65,6 @@ CREATE TABLE `standings` (
   `tid` integer NOT NULL,
   `sid` integer NOT NULL,
   `lid` integer NOT NULL,
-  `pld` integer NOT NULL DEFAULT 0,
-  `pts` integer NOT NULL DEFAULT 0,
   `h_w` integer NOT NULL DEFAULT 0,
   `h_t` integer NOT NULL DEFAULT 0,
   `h_l` integer NOT NULL DEFAULT 0,
