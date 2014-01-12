@@ -1,15 +1,14 @@
 USE myfam;
 
-DROP TABLE `standings`;
-DROP TABLE `roster`;
-DROP TABLE `game`;
-DROP TABLE `event`;
-DROP TABLE `league`;
-DROP TABLE `team`;
-DROP TABLE `field`;
-DROP TABLE `season`;
-DROP TABLE `player`;
-DROP TRIGGER `update_standing`;
+#DROP TABLE `roster`;
+#DROP TABLE `game`;
+#DROP TABLE `event`;
+#DROP TABLE `league`;
+#DROP TABLE `team`;
+#DROP TABLE `field`;
+#DROP TABLE `season`;
+#DROP TABLE `player`;
+#DROP TRIGGER `update_standing`;
 
 CREATE TABLE `league` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -61,26 +60,6 @@ CREATE TABLE `player` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
-CREATE TABLE `standings` (
-  `tid` integer NOT NULL,
-  `sid` integer NOT NULL,
-  `lid` integer NOT NULL,
-  `h_w` integer NOT NULL DEFAULT 0,
-  `h_t` integer NOT NULL DEFAULT 0,
-  `h_l` integer NOT NULL DEFAULT 0,
-  `h_gf` integer NOT NULL DEFAULT 0,
-  `h_ga` integer NOT NULL DEFAULT 0,
-  `a_w` integer NOT NULL DEFAULT 0,
-  `a_t` integer NOT NULL DEFAULT 0,
-  `a_l` integer NOT NULL DEFAULT 0,
-  `a_gf` integer NOT NULL DEFAULT 0,
-  `a_ga` integer NOT NULL DEFAULT 0,
-  PRIMARY KEY (`lid`, `tid`, `sid`),
-  FOREIGN KEY (`tid`) references team(`id`),
-  FOREIGN KEY (`sid`) references season(`id`),
-  FOREIGN KEY (`lid`) references league(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
 CREATE TABLE `roster` (
   `pid` integer NOT NULL,
   `tid` integer NOT NULL,
@@ -104,7 +83,7 @@ CREATE TABLE `game` (
   `h_g` integer NOT NULL DEFAULT 0,
   `a_g` integer NOT NULL DEFAULT 0,
   `has_been_played` boolean NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (`sid`, `fid`, `lid`, `htid`, `atid`),
+  PRIMARY KEY (`sid`, `fid`, `lid`, `htid`, `atid`,`date`,`time`),
   FOREIGN KEY (`sid`) references season(`id`),
   FOREIGN KEY (`fid`) references field(`id`),
   FOREIGN KEY (`htid`) references team(`id`),
@@ -123,6 +102,44 @@ CREATE TABLE `event` (
   FOREIGN KEY (`pid`) references player(`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+/*CREATE TABLE `standings` (
+  `tid` integer NOT NULL,
+  `sid` integer NOT NULL,
+  `lid` integer NOT NULL,
+  `h_w` integer NOT NULL DEFAULT 0,
+  `h_t` integer NOT NULL DEFAULT 0,
+  `h_l` integer NOT NULL DEFAULT 0,
+  `h_gf` integer NOT NULL DEFAULT 0,
+  `h_ga` integer NOT NULL DEFAULT 0,
+  `a_w` integer NOT NULL DEFAULT 0,
+  `a_t` integer NOT NULL DEFAULT 0,
+  `a_l` integer NOT NULL DEFAULT 0,
+  `a_gf` integer NOT NULL DEFAULT 0,
+  `a_ga` integer NOT NULL DEFAULT 0,
+  PRIMARY KEY (`lid`, `tid`, `sid`),
+  FOREIGN KEY (`tid`) references team(`id`),
+  FOREIGN KEY (`sid`) references season(`id`),
+  FOREIGN KEY (`lid`) references league(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;*/
+
+# The Standings table will be a view. We will revisit converting this into a table and triggers
+# some other day.
+CREATE OR REPLACE VIEW `standings` AS
+  (select t.id tid, g1.sid,g1.lid,
+     sum(case when (g1.has_been_played and t.id = htid and h_g > a_g) then 1 else 0 end) h_w,
+     sum(case when (g1.has_been_played and t.id = htid and h_g = a_g) then 1 else 0 end) h_t,
+     sum(case when (g1.has_been_played and t.id = htid and h_g < a_g) then 1 else 0 end) h_l,
+     sum(case when (g1.has_been_played and t.id = htid) then h_g else 0 end) h_gf,
+     sum(case when (g1.has_been_played and t.id = htid) then a_g else 0 end) h_ga,
+     sum(case when (g1.has_been_played and t.id = atid and a_g > h_g) then 1 else 0 end) a_w,
+     sum(case when (g1.has_been_played and t.id = atid and a_g = h_g) then 1 else 0 end) a_t,
+     sum(case when (g1.has_been_played and t.id = atid and a_g < h_g) then 1 else 0 end) a_l,
+     sum(case when (g1.has_been_played and t.id = atid) then a_g else 0 end) a_gf,
+     sum(case when (g1.has_been_played and t.id = atid) then h_g else 0 end) a_ga
+  from team t,game g1
+    where (t.id = g1.htid or t.id = g1.atid) 
+  group by t.id,sid,lid);
+
 /**
  * This trigger will update an entry in 'standings' related to a
  * "first-time" update to a game row, in which the game is then
@@ -130,9 +147,12 @@ CREATE TABLE `event` (
  *
  * The current assumption is that if a second update is needed for
  * a game (for example, an error occurs)
+ * 
+ * This trigger is not being used right now. We will revisit it if
+ * the stanigs view is dropped.
  */
 
-delimiter /
+/*delimiter /
 
 CREATE TRIGGER update_standing AFTER UPDATE ON game
 FOR EACH ROW
@@ -286,3 +306,4 @@ END;
 /
 
 delimiter ;
+*/
