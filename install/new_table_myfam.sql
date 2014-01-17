@@ -1,13 +1,13 @@
 USE myfam;
 
-#DROP TABLE `roster`;
-#DROP TABLE `game`;
-#DROP TABLE `event`;
-#DROP TABLE `league`;
-#DROP TABLE `team`;
-#DROP TABLE `field`;
-#DROP TABLE `season`;
-#DROP TABLE `player`;
+DROP TABLE IF EXISTS `roster`;
+DROP TABLE IF EXISTS `game`;
+DROP TABLE IF EXISTS `event`;
+DROP TABLE IF EXISTS `league`;
+DROP TABLE IF EXISTS `team`;
+DROP TABLE IF EXISTS `field`;
+DROP TABLE IF EXISTS `season`;
+DROP TABLE IF EXISTS `player`;
 #DROP TRIGGER `update_standing`;
 
 CREATE TABLE `league` (
@@ -25,7 +25,8 @@ CREATE TABLE `field` (
   `city` varchar(64),
   `region` varchar(64),
   `pitch_type` varchar(16) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE `team` (
@@ -35,7 +36,8 @@ CREATE TABLE `team` (
   `city` varchar(32) NOT NULL,
   `region` varchar(32),
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`homeid`) REFERENCES field(`id`)
+  FOREIGN KEY (`homeid`) REFERENCES field(`id`),
+  UNIQUE (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE `season` (
@@ -70,7 +72,7 @@ CREATE TABLE `roster` (
   FOREIGN KEY (`tid`) references team(`id`),
   FOREIGN KEY (`sid`) references season(`id`),
   FOREIGN KEY (`pid`) references player(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `game` (
   `sid` integer NOT NULL,
@@ -83,13 +85,13 @@ CREATE TABLE `game` (
   `h_g` integer NOT NULL DEFAULT 0,
   `a_g` integer NOT NULL DEFAULT 0,
   `has_been_played` boolean NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (`sid`, `fid`, `lid`, `htid`, `atid`,`date`,`time`),
+  PRIMARY KEY (`sid`, `fid`, `lid`, `htid`, `atid`, `date`, `time`),
   FOREIGN KEY (`sid`) references season(`id`),
   FOREIGN KEY (`fid`) references field(`id`),
   FOREIGN KEY (`htid`) references team(`id`),
   FOREIGN KEY (`atid`) references team(`id`),
   FOREIGN KEY (`lid`) references league(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `event` (
   `tid` integer NOT NULL,
@@ -100,7 +102,7 @@ CREATE TABLE `event` (
   PRIMARY KEY (`tid`, `pid`, `gid`),
   FOREIGN KEY (`tid`) references team(`id`),
   FOREIGN KEY (`pid`) references player(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 /*CREATE TABLE `standings` (
   `tid` integer NOT NULL,
@@ -122,6 +124,16 @@ CREATE TABLE `event` (
   FOREIGN KEY (`lid`) references league(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;*/
 
+CREATE TABLE `league_reg` (
+  `tid` integer NOT NULL,
+  `sid` integer NOT NULL,
+  `lid` integer NOT NULL,
+  PRIMARY KEY (`lid`, `tid`, `sid`),
+  FOREIGN KEY (`tid`) references team(`id`),
+  FOREIGN KEY (`sid`) references season(`id`),
+  FOREIGN KEY (`lid`) references league(`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
 # The Standings table will be a view. We will revisit converting this into a table and triggers
 # some other day.
 CREATE OR REPLACE VIEW `standings` AS
@@ -136,8 +148,8 @@ CREATE OR REPLACE VIEW `standings` AS
      sum(case when (g1.has_been_played and t.id = atid and a_g < h_g) then 1 else 0 end) a_l,
      sum(case when (g1.has_been_played and t.id = atid) then a_g else 0 end) a_gf,
      sum(case when (g1.has_been_played and t.id = atid) then h_g else 0 end) a_ga
-  from team t,game g1
-    where (t.id = g1.htid or t.id = g1.atid) 
+  from team t
+    inner join game g1 on (t.id = g1.htid or t.id = g1.atid)
   group by t.id,sid,lid);
 
 /**

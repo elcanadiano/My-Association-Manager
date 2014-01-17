@@ -11,7 +11,7 @@ Class Field_m extends CI_Model
 	{
 		$query = $this->db->select('id, name, address, city, region, pitch_type')
 			->from('field')
-			->order_by('name');
+			->order_by('id');
 
 		return $query->get()->result();
 	}

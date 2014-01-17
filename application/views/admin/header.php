@@ -25,6 +25,7 @@
 			<li><a href="/admin/leagues">Leagues</a></li>
 			<li><a href="/admin/fields">Fields</a></li>
 			<li><a href="/admin/seasons">Seasons</a></li>
+			<li><a href="/admin/matches">Matches</a></li>
 		</ul>
 	</nav>
 

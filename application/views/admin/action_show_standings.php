@@ -4,8 +4,6 @@
 	<table>
 		<tr>
 			<th>Team Name</th>
-			<th>Season Name</th>
-			<th>League Name</th>
 			<th>P</th>
 			<th>Pts</th>
 			<th>W</th>
@@ -18,16 +16,14 @@
 		<?php foreach ($teams as $team): ?>
 			<tr>
 				<td><?= $team->team_name ?></td>
-				<td><?= $team->season_name ?></td>
-				<td><?= $team->league_name ?></td>
-				<td><?= $team->pld ?></td>
-				<td><?= $team->pts ?></td>
-				<td><?= $team->wins ?></td>
-				<td><?= $team->ties ?></td>
-				<td><?= $team->losses ?></td>
-				<td><?= $team->goals ?></td>
-				<td><?= $team->allowed ?></td>
-				<td><?= $team->goals - $team->allowed ?></td>
+				<td><?= $team->pld ? $team->pld : 0 ?></td>
+				<td><?= $team->pts ? $team->pts : 0 ?></td>
+				<td><?= $team->wins ? $team->wins : 0 ?></td>
+				<td><?= $team->ties ? $team->ties : 0 ?></td>
+				<td><?= $team->losses ? $team->losses : 0 ?></td>
+				<td><?= $team->goals ? $team->goals : 0 ?></td>
+				<td><?= $team->allowed ? $team->allowed : 0 ?></td>
+				<td><?= $team->goals - $team->allowed ? $team->goals - $team->allowed : 0 ?></td>
 			</tr>
 		<?php endforeach ?>
 	</table>

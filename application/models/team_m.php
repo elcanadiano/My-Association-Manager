@@ -71,6 +71,27 @@ Class Team_m extends CI_Model
 	}
 
 	/**
+	 * Retrieves all the teams for a given league.
+	 *
+	 * @return  object
+	 */
+	function retrieve_by_league($sid, $lid)
+	{
+		$where = array(
+			'r.sid' => $sid,
+			'r.lid' => $lid
+		);
+
+		$query = $this->db->select('t.id, t.name')
+			->from('team t')
+			->join('league_reg r', 't.id = r.tid', 'inner')
+			->where($where)
+			->order_by('t.id');
+
+		return $query->get()->result();
+	}
+
+	/**
 	 * Inserts a record into the database. Returns TRUE if a successful insert was added.
 	 *
 	 * @return  boolean
