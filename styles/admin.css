@@ -125,3 +125,7 @@ input[type=number]::-webkit-outer-spin-button {
 .scoreboard .teams > div {
 	display:inline-block;
 }
+
+.scoreboard h3, .scoreboard p {
+	margin:0;
+}

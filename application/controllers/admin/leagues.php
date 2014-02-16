@@ -261,6 +261,7 @@ class Leagues extends C_Admin {
 			'css' => array('/styles/admin.css'),
 			'leagues' => $leagues,
 			'seasons' => $seasons,
+			'msg' => 'Please select the league and the season for the standings you wish to see.',
 			'submit_message' => 'Show Standings',
 			'sidenav' => self::$user_links
 		);

@@ -75,6 +75,7 @@ CREATE TABLE `roster` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `game` (
+  `id` integer NOT NULL AUTO_INCREMENT,
   `sid` integer NOT NULL,
   `fid` integer NOT NULL,
   `lid` integer NOT NULL,
@@ -85,13 +86,14 @@ CREATE TABLE `game` (
   `h_g` integer NOT NULL DEFAULT 0,
   `a_g` integer NOT NULL DEFAULT 0,
   `has_been_played` boolean NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (`sid`, `fid`, `lid`, `htid`, `atid`, `date`, `time`),
+  PRIMARY KEY (`id`),
+  UNIQUE (`sid`, `fid`, `lid`, `htid`, `atid`, `date`, `time`),
   FOREIGN KEY (`sid`) references season(`id`),
   FOREIGN KEY (`fid`) references field(`id`),
   FOREIGN KEY (`htid`) references team(`id`),
   FOREIGN KEY (`atid`) references team(`id`),
   FOREIGN KEY (`lid`) references league(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE `event` (
   `tid` integer NOT NULL,

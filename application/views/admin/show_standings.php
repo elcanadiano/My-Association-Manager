@@ -1,6 +1,6 @@
 <?php $this->load->view('admin/header.php') ?>
 
-<p>Please select the league and the season.</p>
+<p><?= $msg ?></p>
 <?= form_open('admin/leagues/' . $form_action); ?>
 	<ul class='create-user'>
 		<li>

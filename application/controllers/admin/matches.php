@@ -29,13 +29,29 @@ class Matches extends C_Admin {
 	 */
 	function index()
 	{
+		// Retrieve all the players, teams, or seasons.
+		$leagues = $this->leagues->retrieve_roster();
+		$seasons = $this->seasons->retrieve_roster();
+
+		// If there are no players, teams, or seasons...
+		if (!$leagues || !$seasons)
+		{
+			show_error('At least one league and one season must be added for matches to work.');
+		}
+
 		$data = array(
+			'form_action' => 'action_get_matches',
 			'title' => 'Matches',
-			'js' => array(),
+			'js' => array('/js/admin/show_roster.js'),
 			'css' => array('/styles/admin.css'),
+			'leagues' => $leagues,
+			'seasons' => $seasons,
+			'msg' => 'Please select the league and the season for the matches you wish to see.',
+			'submit_message' => 'Show Matches',
 			'sidenav' => self::$user_links
 		);
 
+		$this->load->helper(array('form'));
 		$this->load->view('admin/show_all_matches.php', $data);
 	}
 
@@ -95,7 +111,6 @@ class Matches extends C_Admin {
 	{
 		if (!$sid || !$lid)
 		{
-			echo 'Something was incorrectly passed in.';
 			return;
 		}
 
@@ -139,20 +154,18 @@ class Matches extends C_Admin {
 		// === 'true' because the value will pass in as the string 'true'.
 		$has_been_played = $this->input->post('has_been_played') === 'true';
 
-		// If has_been_played is set, then the goals must be entered.
-		if ($has_been_played && !($h_g && $a_g))
+		// A team cannot play itself.
+		if ($htid === $atid)
 		{
 			echo json_encode(array(
 				'status' => 'danger',
-				'message' => "The match's score must be entered if it has been played."
+				'message' => 'A team cannot play itself.'
 			));
 			return;
 		}
 
 		if ($this->form_validation->run())
 		{
-			log_message('debug', 'Verified');
-
 			if ($this->matches->insert($sid, $fid, $lid, $htid, $atid, $date, $time, $h_g, $a_g, $has_been_played))
 			{
 				echo json_encode(array(
@@ -167,5 +180,30 @@ class Matches extends C_Admin {
 			'status' => 'danger',
 			'message' => 'One or more of the fields are invalid.'
 		));
+	}
+
+	/**
+	 * Action function to get all the matches for a given league and season.
+	 */
+	function action_get_matches()
+	{
+		// Loading form validation helper and the Markdown parser.
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('sid', 'Season ID', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('lid', 'League ID', 'trim|required|xss_clean');
+
+		$sid = $this->input->post('sid');
+		$lid = $this->input->post('lid');
+
+		if ($this->form_validation->run())
+		{
+			$data = array(
+				'matches' => $this->matches->retrieve_by_league($sid, $lid)
+			);
+			
+			$this->load->view('admin/action_get_matches.php', $data);
+			return;
+		}
 	}
 }

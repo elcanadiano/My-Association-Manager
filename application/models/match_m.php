@@ -40,6 +40,30 @@ Class Match_m extends CI_Model
 	}
 
 	/**
+	 * Retrieves all the matches for a league during a given season.
+	 *
+	 * @return  object
+	 */
+	function retrieve_by_league($sid, $lid)
+	{
+		$where = array(
+			'sid' => $sid,
+			'lid' => $lid
+		);
+
+		$query = $this->db->select('g.id, f.name AS field_name, s.name AS season_name,
+			ht.name AS home_team, at.name AS away_team, h_g, a_g, date, time, has_been_played')
+			->from('game g')
+			->join('field f', 'g.fid = f.id', 'inner')
+			->join('season s', 'g.sid = s.id', 'inner')
+			->join('team ht', 'g.htid = ht.id', 'inner')
+			->join('team at', 'g.atid = at.id', 'inner')
+			->where($where);
+
+		return $query->get()->result();
+	}
+
+	/**
 	 * Inserts a record into the database. Returns TRUE if a successful insert was added.
 	 *
 	 * @return  boolean

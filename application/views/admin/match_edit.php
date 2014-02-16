@@ -38,7 +38,7 @@
 	<div class="scoreboard">
 		<div class="teams">
 			<div class="home_team">
-				<label for="htid">Home Team:</label>
+				<label for="htid">Home:</label>
 				<select name="htid" id="htid" disabled>
 					<option value="">Select Team</option>
 				</select>
@@ -51,7 +51,7 @@
 				<input type="number" size="1" id="a_g" name="a_g" value="<?= $a_g ?>" maxlength="16" style="width:50px" />
 			</div>
 			<div class="away_team">
-				<label for="atid">Away Team:</label>
+				<label for="atid">Away:</label>
 				<select name="atid" id="atid" disabled>
 					<option value="">Select Team</option>
 				</select>
